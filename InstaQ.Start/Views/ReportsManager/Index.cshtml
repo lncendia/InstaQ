@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "Менеджер отчётов";
+}
+
+<div class="col-lg-6">
+    <h3>Менеджер отчётов</h3>
+    <div id="message"></div>
+    <p>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample1" aria-expanded="false" aria-controls="multiCollapseExample1">Проверка участников</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Проверка лайков</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">Проверка комментариев</button>
+    </p>
+    <div class="collapse multi-collapse" id="multiCollapseExample1">
+        <div class="card card-body">
+            @await Html.PartialAsync("StartParticipantReport")
+        </div>
+    </div>
+    <div class="collapse multi-collapse" id="multiCollapseExample2">
+        <div class="card card-body">
+            @await Html.PartialAsync("StartLikeReport")
+        </div>
+    </div>
+    <div class="collapse multi-collapse" id="multiCollapseExample3">
+        <div class="card card-body">
+            @await Html.PartialAsync("StartCommentReport")
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/js/sender.js"></script>
+    <script src="~/js/reportsManager.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" integrity="sha256-9yRP/2EFlblE92vzCA10469Ctd0jT48HnmmMw5rJZrA=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+                    $('#select1').select2();
+                    $('#select2').select2();
+                });
+        </script>
+}
+
+@section styles{
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    <style>button{margin-bottom: 5px;}</style>
+}

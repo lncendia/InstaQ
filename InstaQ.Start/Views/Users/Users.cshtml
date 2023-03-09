@@ -1,0 +1,11 @@
+﻿@model IEnumerable<InstaQ.WEB.ViewModels.Users.UserShortViewModel>
+
+@foreach (var user in Model)
+{
+    <tr class="element">
+        <td>
+            <a asp-action="Edit" asp-route-userId="@user.Id">@user.Username</a>
+        </td>
+        <td>@user.Email</td>
+    </tr>
+}

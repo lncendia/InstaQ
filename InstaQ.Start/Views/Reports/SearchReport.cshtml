@@ -1,0 +1,22 @@
+﻿@using InstaQ.Domain.ReportLogs.Enums
+@model InstaQ.WEB.ViewModels.Reports.ReportsSearchQueryViewModel
+<tr>
+    <th scope="col">
+        <input asp-for="From" class="form-control"/>
+    </th>
+    <th scope="col">
+        <select class="form-select" asp-for="ReportType">
+            <option selected="selected" value="">Все</option>
+            <option value="@ReportType.Likes">Лайки</option>
+            <option value="@ReportType.Comments">Комментарии</option>
+            <option value="@ReportType.Participants">Участники</option>
+            <option value="@ReportType.Thieves">Воры</option>
+            <option value="@ReportType.TagInfo">Информация</option>
+        </select>
+    </th>
+    <th scope="col">
+        <input asp-for="To" class="form-control"/>
+    </th>
+    <th scope="col"></th>
+    <th scope="col"></th>
+</tr>

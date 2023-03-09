@@ -1,0 +1,55 @@
+﻿@model InstaQ.WEB.ViewModels.Participants.EditParticipantViewModel
+@{
+    ViewData["Title"] = Model.Username;
+    var items = ViewBag.Participants as List<(Guid Id, string Name)>;
+    var selectedListItems = items?.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+}
+<div id="message"></div>
+<div class="col-lg-6">
+    <h3>
+        Редактирование участника <a href="https://vk.com/@Model.Username">@Model.Username</a>
+    </h3>
+    <form id="edit" asp-action="Edit" method="post" class="form-horizontal">
+        <div asp-validation-summary="ModelOnly"></div>
+        <input type="hidden" asp-for="Id">
+        <div class="form-group">
+            <div class="mt-3">
+                <label asp-for="Note"></label>
+                <textarea asp-for="Note" class="form-control"></textarea>
+                <span asp-validation-for="Note" class="text-danger"></span>
+            </div>
+            <div class="mt-3">
+                <input type="checkbox" class="form-check-input" id="vip" asp-for="Vip">
+                <label asp-for="Vip" class="form-check-label" for="vip"></label>
+            </div>
+            <div class="mt-3">
+                <label asp-for="ParentId"></label>
+                <select id="select" class="form-select" asp-for="ParentId" asp-items="selectedListItems">
+                    <option value="" selected>Не выбрано</option>
+                </select>
+                <span asp-validation-for="ParentId" class="text-danger"></span>
+                @if (Model.ParentId.HasValue)
+                {
+                    <span>
+                        <a class="text-decoration-none" asp-action="Edit" asp-route-id="@Model.ParentId">Редактировать родительский аккаунт</a>
+                    </span>
+                }
+            </div>
+        </div>
+        <div class="mt-3">
+            <input class="btn shadow-none btn-outline-dark" type="submit" value="Изменить">
+        </div>
+    </form>
+</div>
+
+@section scripts
+{
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" integrity="sha256-9yRP/2EFlblE92vzCA10469Ctd0jT48HnmmMw5rJZrA=" crossorigin="anonymous"></script>
+    <script src="~/js/sender.js"></script>
+    <script src="~/js/editParticipant.js"></script>
+}
+
+@section styles
+{
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+}

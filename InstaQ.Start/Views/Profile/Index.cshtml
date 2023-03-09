@@ -1,0 +1,187 @@
+﻿@using InstaQ.Domain.Users.Enums
+@using InstaQ.WEB.ViewModels.Links
+@using InstaQ.WEB.ViewModels.Payments
+@using InstaQ.WEB.ViewModels.Settings
+@model InstaQ.WEB.ViewModels.Profile.ProfileViewModel
+@{
+    ViewData["Title"] = "Профиль";
+}
+<h3>Настройки профиля</h3>
+<div id="message"></div>
+<div class="my-3">
+    <h3>Показатели</h3>
+    <div class="card card-body">
+        <div class="row gy-3">
+            <div class="col-4">
+                <h6>Участников: @Model.Stats.ParticipantsCount</h6>
+                <h6>Отчетов: @Model.Stats.ReportsCount</h6>
+                <h6>Из них @Model.Stats.LastMonthReportsCount за последний месяц</h6>
+            </div>
+            @if (Model.Target != null)
+            {
+                var type = Model.Target.Type == ParticipantsType.Followers ? "Подписчики" : "Подписки";
+                <div class="col-4">
+                    <h6 class="d-inline-block" style="margin-bottom: 0.5rem;">Цель: </h6>
+                    <a href="https://vk.com/id@(Model.Target!.TargetName)">Перейти</a>
+                    <h6>Тип: @type</h6>
+                </div>
+            }
+            @if (Model.Subscribe != null)
+            {
+                <div class="col-4">
+                    <h6>Подписан с: @Model.Subscribe.SubscriptionStart.ToOffset(TimeSpan.FromHours(3)).ToString("d")</h6>
+                    <h6>Подписан до: @Model.Subscribe.SubscriptionEnd.ToOffset(TimeSpan.FromHours(3)).ToString("d")</h6>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="mb-3">
+    <h3>Действия</h3>
+    <div class="row gx-3 gy-3">
+        <div class="col-lg-6">
+            <div class="card card-body">
+                <p>
+                    <button class="btn menu-button btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample1" aria-expanded="false" aria-controls="multiCollapseExample1">Смена почты</button>
+                    <button class="btn menu-button btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Смена пароля</button>
+                </p>
+                <div class="collapse multi-collapse" id="multiCollapseExample1">
+                    @await Html.PartialAsync("ChangeEmail", new ChangeEmailViewModel {Email = Model.Email})
+                </div>
+                <div class="collapse multi-collapse" id="multiCollapseExample2">
+                    @await Html.PartialAsync("ChangePassword", new ChangePasswordViewModel())
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card card-body">
+                <p>
+                    <button class="btn menu-button btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample" aria-expanded="false" aria-controls="multiCollapseExample">Смена имени</button>
+                    <button class="btn menu-button btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">Смена цели</button>
+                </p>
+                <div class="collapse multi-collapse" id="multiCollapseExample">
+                    @await Html.PartialAsync("ChangeName", new ChangeNameViewModel {Name = Model.Name})
+                </div>
+                <div class="collapse multi-collapse" id="multiCollapseExample3">
+                    @await Html.PartialAsync("ChangeTarget", new ChangeTargetViewModel {Target = Model.Target?.TargetName!, Type = Model.Target?.Type ?? ParticipantsType.Followers})
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row gx-3 gy-3">
+    <div class="col-lg-6">
+        <h3>Связи</h3>
+        <div class="card card-body">
+            <div class="table-responsive">
+                <form id="createLink" asp-controller="Link" asp-action="Create" method="post" class="form-horizontal">
+                    <table class="table table-sm table-hover table-bordered table-striped table-condensed text-center align-middle">
+                        <thead class="align-middle">
+                        <tr>
+                            <th scope="col">Отправитель</th>
+                            <th scope="col">Получатель</th>
+                            <th scope="col">Статус приглашения</th>
+                            <th scope="col">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody class="align-middle">
+                        @await Html.PartialAsync("CreateCommunication", new CreateLinkViewModel())
+                        @foreach (var link in Model.Links)
+                        {
+                            <tr id="@link.Id">
+                                <td>@link.User1</td>
+                                <td>@link.User2</td>
+                                @if (link.IsConfirmed)
+                                {
+                                    <td>
+                                        <span class="text-success">Активна</span>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <span class="text-warning" id="stats@(link.Id)">В ожидании</span>
+                                    </td>
+                                }
+                                <td>
+                                    <a class="action" href="#" link-id="@link.Id" onclick="DeleteLink(this)">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                        </svg>
+                                    </a>
+                                    @if (link is { IsConfirmed: false,IsSender: false })
+                                    {
+                                        <a class="action" href="#" link-id="@link.Id" onclick="AcceptLink(this)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+                                                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z"/>
+                                                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                                            </svg>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <h3>Платежи</h3>
+        <div class="card card-body">
+            <div class="table-responsive">
+                <form id="createPayment" asp-controller="Payment" asp-action="Create" method="post" class="form-horizontal">
+                    <table class="table table-sm table-hover table-bordered table-striped table-condensed text-center align-middle">
+                        <thead class="align-middle">
+                        <tr>
+                            <th scope="col">Дата создания</th>
+                            <th scope="col">Сумма</th>
+                            <th scope="col">Статус</th>
+                            <th scope="col">Ссылка</th>
+                        </tr>
+                        </thead>
+                        <tbody class="align-middle">
+                        @await Html.PartialAsync("CreatePayment", new CreatePaymentViewModel())
+                        @foreach (var payment in Model.Payments)
+                        {
+                            <tr>
+                                <td>@payment.CreationDate.ToOffset(TimeSpan.FromHours(3)).ToString("d")</td>
+                                <td>@payment.Amount.ToString("C")</td>
+                                @if (payment.IsSuccessful)
+                                {
+                                    <td>
+                                        <span class="badge bg-success">Оплачено</span>
+                                    </td>
+                                    <td>-</td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <a class="badge bg-danger" href="#" payment-id="@payment.Id" onclick="Check(this)">Проверить оплату</a>
+                                    </td>
+                                    <td>
+                                        <a class="action" href="@payment.PayUrl">Перейти</a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section styles{
+    <link rel="stylesheet" href="~/css/profile.css"/>
+}
+
+@section scripts{
+    <script src="~/js/sender.js"></script>
+    <script src="~/js/profileManager.js"></script>
+}

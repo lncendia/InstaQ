@@ -1,0 +1,19 @@
+﻿@model InstaQ.WEB.ViewModels.Users.EditUserViewModel
+
+<form id="editForm" asp-action="Edit" asp-controller="Users" method="post" class="form-horizontal">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <input type="hidden" asp-for="Id"/>
+        <label asp-for="NewEmail"></label>
+        <input asp-for="NewEmail" class="form-control"/>
+        <span asp-validation-for="NewEmail" class="text-danger"></span>
+    </div>
+    <div class="mt-3">
+        <label asp-for="Username"></label>
+        <input asp-for="Username" class="form-control"/>
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="mt-3">
+        <input type="submit" value="Сохранить" class="btn shadow-none btn-outline-dark"/>
+    </div>
+</form>

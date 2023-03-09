@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="EfCoreDialogsState">
+    <option name="keyValueStorage">
+      <map>
+        <entry key="Common:2830a954-ff1c-4501-aa11-e0023a1e7eed:dbContext" value="InstaQ.Infrastructure.DataStorage.Context.ApplicationDbContext" />
+        <entry key="Common:a32d5637-5d77-42b7-a6f8-4388fb13595b:dbContext" value="InstaQ.Infrastructure.ApplicationDataStorage.ApplicationContext" />
+        <entry key="Common:buildConfiguration" value="Debug" />
+        <entry key="Common:noBuild" value="false" />
+        <entry key="Common:outputFolder" value="Migrations" />
+        <entry key="Common:useDefaultConnection" value="true" />
+      </map>
+    </option>
+  </component>
+</project>

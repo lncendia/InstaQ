@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Список пользователей";
+}
+<div class="table-responsive">
+    <form asp-action="Index" method="get" class="form-horizontal" id="filter">
+        <table class="table table-sm table-hover table-bordered table-striped table-condensed text-center align-middle">
+            <thead class="align-middle">
+            <tr>
+                <th>Имя пользователя</th>
+                <th>Email</th>
+            </tr>
+            @await Html.PartialAsync("SearchUsers")
+            </thead>
+            <tbody class="align-middle elements"></tbody>
+        </table>
+    </form>
+    <div class="spinner">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://unpkg.com/@@webcreate/infinite-ajax-scroll@@^3/dist/infinite-ajax-scroll.min.js"></script>
+    <script src="~/js/scroller.js"></script>
+    <script src="~/js/users.js"></script>
+}

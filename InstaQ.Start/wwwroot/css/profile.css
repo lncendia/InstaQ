@@ -1,0 +1,16 @@
+﻿table {
+    min-height: 120px;
+    max-height: 500px;
+}
+
+.menu-button {
+    margin-bottom: 5px;
+}
+
+a.badge {
+    text-decoration: none;
+}
+
+a.badge.bg-danger:hover {
+    color: #3b3b3b;
+}

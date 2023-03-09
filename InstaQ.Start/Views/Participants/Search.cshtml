@@ -1,0 +1,22 @@
+﻿@model InstaQ.WEB.ViewModels.Participants.ParticipantsSearchQueryViewModel
+
+<tr>
+    <th scope="col">
+        <input asp-for="Username" class="form-control"/>
+    </th>
+    <th scope="col">
+        <select class="form-select" asp-for="HasChild">
+            <option selected="selected" value="">Все</option>
+            <option value="true">Есть</option>
+            <option value="false">Нет</option>
+        </select>
+    </th>
+    <th scope="col"></th>
+    <th scope="col">
+        <select class="form-select" asp-for="Vip">
+            <option selected="selected" value="">Все</option>
+            <option value="true">VIP</option>
+            <option value="false">Обычные</option>
+        </select>
+    </th>
+</tr>

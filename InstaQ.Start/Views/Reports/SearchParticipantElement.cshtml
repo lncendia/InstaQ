@@ -1,0 +1,23 @@
+﻿@using InstaQ.Domain.Reposts.ParticipantReport.Enums
+@model InstaQ.WEB.ViewModels.Elements.ParticipantElementsSearchQueryViewModel
+<tr>
+    <th scope="col">
+        <input type="hidden" asp-for="ReportId">
+        <input asp-for="Name" class="form-control"/>
+    </th>
+    <th scope="col">
+        <select class="form-select" asp-for="HasChildren">
+            <option selected="selected" value="">Все</option>
+            <option value="true">Есть</option>
+            <option value="false">Нет</option>
+        </select>
+    </th>
+    <th scope="col">
+        <select class="form-select" asp-for="ElementType">
+            <option selected="selected" value="">Все</option>
+            <option value="@ElementType.Rename">Сменил ник</option>
+            <option value="@ElementType.Leave">Покинул чат</option>
+            <option value="@ElementType.New">Добавлен в чат</option>
+        </select>
+    </th>
+</tr>

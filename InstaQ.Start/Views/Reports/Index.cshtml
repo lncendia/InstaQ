@@ -1,0 +1,41 @@
+﻿
+
+@{
+    ViewData["Title"] = "Отчеты";
+}
+
+<div class="table-responsive">
+    <form asp-action="Find" method="get" class="form-horizontal" id="filter">
+        <table class="table table-sm table-hover table-bordered table-striped table-condensed text-center align-middle">
+            <thead class="align-middle">
+            <tr>
+                <th scope="col">Дата создания</th>
+                <th scope="col">Тип</th>
+                <th scope="col">Дата завершения</th>
+                <th scope="col">Статус</th>
+                <th scope="col">Действия</th>
+            </tr>
+            @await Html.PartialAsync("SearchReport")
+            </thead>
+            <tbody class="align-middle elements"></tbody>
+        </table>
+    </form>
+    <div class="spinner">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://unpkg.com/@@webcreate/infinite-ajax-scroll@@^3/dist/infinite-ajax-scroll.min.js"></script>
+    <script src="~/js/scroller.js"></script>
+    <script src="~/js/reports.js"></script>
+}

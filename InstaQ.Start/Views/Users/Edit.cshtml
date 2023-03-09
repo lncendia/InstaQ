@@ -1,0 +1,50 @@
+﻿@using InstaQ.WEB.ViewModels.Users
+@model InstaQ.WEB.ViewModels.Users.UserViewModel
+@{
+    ViewData["Title"] = Model.Username;
+}
+
+@section styles
+{
+    <style>button{margin-bottom: 5px;}</style>
+}
+
+<div class="col-lg-6">
+    <h3>Пользователь @Model.Username</h3>
+    <div id="message"></div>
+    <div class="card card-body">
+        <p>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">Изменение данных</button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample4" aria-expanded="false" aria-controls="multiCollapseExample4">Изменение пароля</button>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample5" aria-expanded="false" aria-controls="multiCollapseExample5">Добавление подписки</button>
+            <a style="margin-bottom: 5px" class="btn btn-primary" asp-action="AuthenticateAsUser" asp-route-id="@Model.Id">Аутентифицировать как</a>
+        </p>
+        <div class="row">
+            <div class="col-12">
+                <div class="collapse multi-collapse" id="multiCollapseExample3">
+                    @await Html.PartialAsync("EditUser", new EditUserViewModel {Id = Model.Id, NewEmail = Model.Email, Username = Model.Username})
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="collapse multi-collapse" id="multiCollapseExample4">
+                    @await Html.PartialAsync("ChangePassword", new ChangePasswordViewModel {Email = Model.Email})
+                </div>
+            </div>
+            <div class="col-12">
+                <div class="collapse multi-collapse" id="multiCollapseExample5">
+                    @if (Model.EndOfSubscribe.HasValue)
+                    {
+                        <div class="mb-1">Подписка действует до @Model.EndOfSubscribe.Value.ToOffset(TimeSpan.FromHours(3)).ToString("d")</div>
+                    }
+                    @await Html.PartialAsync("AddSubscribe", new AddSubscribeViewModel {Id = Model.Id})
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script src="~/js/sender.js"></script>
+    <script src="~/js/editUser.js"></script>
+}

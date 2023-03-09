@@ -1,0 +1,12 @@
+﻿@model InstaQ.WEB.ViewModels.Payments.CreatePaymentViewModel
+<tr id="payments">
+    <td></td>
+    <td>
+        <input asp-for="Amount" class="form-control">
+        <span asp-validation-for="Amount" class="text-danger"></span>
+    </td>
+    <td>
+        <input class="btn shadow-none btn-outline-dark" type="submit" value="Создать">
+    </td>
+    <td></td>
+</tr>

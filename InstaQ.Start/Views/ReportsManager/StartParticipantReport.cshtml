@@ -1,0 +1,14 @@
+﻿
+@model InstaQ.WEB.ViewModels.ReportsManager.ParticipantReportCreateViewModel
+<form id="participantForm" asp-controller="ReportsManager" asp-action="StartParticipantReport" method="post" class="form-horizontal">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div>
+        <label asp-for="Timer"></label>
+        <input asp-for="Timer" class="form-control"/>
+        <span asp-validation-for="Timer" class="text-danger"></span>
+        <span>Укажите, если хотите запланировать отчёт</span>
+    </div>
+    <div class="mt-3">
+        <input class="btn shadow-none btn-outline-dark" type="submit" value="Создать">
+    </div>
+</form>

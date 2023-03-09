@@ -1,0 +1,86 @@
+﻿@using InstaQ.Domain.ReportLogs.Enums
+@model IEnumerable<InstaQ.WEB.ViewModels.Reports.ReportShortViewModel>
+@foreach (var report in Model)
+{
+    <tr class="element">
+        <td class="child">
+            @if (report.Id.HasValue)
+            {
+                switch (report.Type)
+                {
+                    case ReportType.Likes:
+                        <a asp-action="LikeReport" asp-route-id="@report.Id">@report.CreationDate.ToString("G")</a>
+                        break;
+                    case ReportType.Comments:
+                        <a asp-action="CommentReport" asp-route-id="@report.Id">@report.CreationDate.ToString("G")</a>
+                        break;
+                    case ReportType.Participants:
+                        <a asp-action="ParticipantsReport" asp-route-id="@report.Id">@report.CreationDate.ToString("G")</a>
+                        break;
+                }
+            }
+            else
+            {
+                <span>@report.CreationDate.ToString("G")</span>
+            }
+        </td>
+        <td class="child">
+            @switch (report.Type)
+            {
+                case ReportType.Likes:
+                    <span class="badge bg-danger">Лайки</span>
+                    <span class="badge bg-danger">@report.Hashtag</span>
+                    break;
+                case ReportType.Comments:
+                    <span class="badge bg-success">Комментарии</span>
+                    <span class="badge bg-success">@report.Hashtag</span>
+                    break;
+                case ReportType.Participants:
+                    <span class="badge bg-primary">Участники</span>
+                    break;
+            }
+        </td>
+        <td class="child">
+            @if (report.IsCompleted)
+            {
+                <span>@report.EndDate!.Value.ToString("G")</span>
+            }
+            else
+            {
+                <span>-</span>
+            }
+        </td>
+        <td class="child">
+            @if (report.IsCompleted)
+            {
+                if (report.IsSucceeded)
+                {
+                    <span class="badge bg-success">Успешно</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Ошибка</span>
+                }
+            }
+            else
+            {
+                <span class="badge bg-warning">В процессе</span>
+            }
+        </td>
+        <td class="child">
+            @if (!report.Id.HasValue)
+            {
+                <span>Отчёт удалён</span>
+            }
+            else
+            {
+                <a class="action" href="#" report-id="@report.Id" report-type="@report.Type" onclick="Cancel(this)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                    </svg>
+                </a>
+            }
+        </td>
+    </tr>
+}

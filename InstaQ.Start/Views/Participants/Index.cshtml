@@ -1,0 +1,38 @@
+﻿@model InstaQ.WEB.ViewModels.Participants.ParticipantViewModel
+@{
+    ViewData["Title"] = "Участники";
+}
+<div class="table-responsive">
+    <form id="filter" asp-controller="Participants" asp-action="Participants" method="get">
+        <table class="table table-sm table-hover table-bordered table-striped table-condensed text-center align-middle">
+            <thead class="align-middle">
+            <tr>
+                <th scope="col">Участник</th>
+                <th scope="col">Привязанные аккаунты</th>
+                <th scope="col">Заметка</th>
+                <th scope="col">VIP</th>
+            </tr>
+            @await Html.PartialAsync("Search")
+            </thead>
+            <tbody class="align-middle elements"></tbody>
+        </table>
+    </form>
+    <div class="spinner">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+</div>
+
+@section scripts {
+    <script src="https://unpkg.com/@@webcreate/infinite-ajax-scroll@@^3/dist/infinite-ajax-scroll.min.js"></script>
+    <script src="~/js/scroller.js"></script>
+    <script src="~/js/participants.js"></script>
+}

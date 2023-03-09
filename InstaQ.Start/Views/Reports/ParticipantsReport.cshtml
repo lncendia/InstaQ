@@ -1,0 +1,89 @@
+﻿@using InstaQ.WEB.ViewModels.Elements
+@model InstaQ.WEB.ViewModels.Reports.ParticipantReportViewModel
+@{
+    ViewData["Title"] = "Отчет";
+}
+<div class="table-responsive">
+    <table class="table table-sm table-hover table-bordered table-striped table-condensed text-center align-middle">
+        <tbody class="align-middle">
+        <tr>
+            <th scope="row">Дата создания</th>
+            <td>@Model.CreationDate.ToOffset(TimeSpan.FromHours(3)).ToString("G")</td>
+        </tr>
+        <tr>
+            <th scope="row">Ссылка</th>
+            <td>
+                <a href="https://vk.com/id@(Model.Pk)">Перейти</a>
+            </td>
+        </tr>
+        @if (Model.IsStarted)
+        {
+            <tr>
+                <th scope="row">Дата начала</th>
+                <td>@Model.StartDate!.Value.ToOffset(TimeSpan.FromHours(3)).ToString("G")</td>
+            </tr>
+        }
+        @if (Model.IsCompleted)
+        {
+            <tr>
+                <th scope="row">Дата зваершения</th>
+                <td>@Model.EndDate!.Value.ToOffset(TimeSpan.FromHours(3)).ToString("G")</td>
+            </tr>
+            @if (Model.IsSucceeded)
+            {
+                <tr>
+                    <th scope="row">Успешно</th>
+                    <td>Да</td>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <th scope="row">Ошибка</th>
+                    <td>@Model.Message</td>
+                </tr>
+            }
+        }
+        <tr>
+            <th scope="row">Кол-во элементов</th>
+            <td>@Model.ElementsCount</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="table-responsive">
+    <form asp-action="ParticipantsReport" method="get" class="form-horizontal" id="filter">
+        <table class="table table-sm table-hover table-bordered table-striped table-condensed text-center align-middle">
+            <thead class="align-middle">
+            <tr>
+                <th scope="col">Участник</th>
+                <th scope="col">Дочерние аккаунты</th>
+                <th scope="col">Статус</th>
+            </tr>
+            @await Html.PartialAsync("SearchParticipantElement", new ParticipantElementsSearchQueryViewModel { ReportId = Model.Id })
+            </thead>
+            <tbody class="align-middle elements"></tbody>
+        </table>
+    </form>
+    <div class="spinner">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+</div>
+
+
+@section scripts
+{
+    <script src="https://unpkg.com/@@webcreate/infinite-ajax-scroll@@^3/dist/infinite-ajax-scroll.min.js"></script>
+    <script src="~/js/scroller.js"></script>
+    <script src="~/js/participantReport.js"></script>
+}
