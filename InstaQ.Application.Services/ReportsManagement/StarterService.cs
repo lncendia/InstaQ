@@ -99,7 +99,9 @@ public class StarterService : IReportStarter
             UserNotFoundException => "Создатель отчёта не найден",
             ElementsListEmptyException => "Участники не найдены",
             PublicationsListEmptyException => "Публикации по хештегу не найдены",
-            HttpRequestException => "Возникла ошибка с подключением на сервере",
+            HttpRequestException httpEx => httpEx.InnerException is TaskCanceledException
+                ? throw httpEx.InnerException
+                : "Возникла ошибка с подключением на сервере",
             _ => throw ex
         };
     }

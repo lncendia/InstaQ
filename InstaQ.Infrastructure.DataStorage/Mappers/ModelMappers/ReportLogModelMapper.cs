@@ -23,6 +23,7 @@ internal class LogModelMapper : IModelMapperUnit<LogModel, ReportLog>
         reportLog.FinishedAt = model.FinishedAt;
         reportLog.AdditionalInfo = model.AdditionalInfo;
         reportLog.Type = model.Type;
+        reportLog.Amount = model.Amount;
         return reportLog;
     }
 }

@@ -47,7 +47,7 @@ public class ElementsController : Controller
             return BadRequest(message);
         }
     }
-    
+
     [HttpGet]
     public async Task<IActionResult> CommentReportElements(PublicationElementsSearchQueryViewModel query)
     {
@@ -61,7 +61,8 @@ public class ElementsController : Controller
             var publicationsViewModels = elements.Publications.Select(Map).ToList();
             var elementsViewModels = elements.Elements.Select(x => _elementMapper.CommentElementMapper.Value.Map(x));
             return elements.Elements.Any()
-                ? PartialView("CommentElementsList", new CommentElementsViewModel(elementsViewModels, publicationsViewModels))
+                ? PartialView("CommentElementsList",
+                    new CommentElementsViewModel(elementsViewModels, publicationsViewModels))
                 : BadRequest();
         }
         catch (Exception e)
@@ -101,6 +102,6 @@ public class ElementsController : Controller
     }
 
 
-    private static PublicationViewModel Map(PublicationDto publication) => new(publication.Id,
-        publication.ItemId, publication.Pk, publication.IsLoaded);
+    private static PublicationViewModel Map(PublicationDto publication) => new(publication.Id, publication.OwnerPk,
+        publication.Code, publication.IsLoaded);
 }

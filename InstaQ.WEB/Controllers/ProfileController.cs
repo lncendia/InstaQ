@@ -35,13 +35,12 @@ public class ProfileController : Controller
                 UserNotFoundException => "Пользователь не найден",
                 _ => "Произошла ошибка"
             };
-            return RedirectToAction("Index", "Home", new {message});
+            return RedirectToAction("Index", "Home", new { message });
         }
     }
 
     private ProfileViewModel Map(ProfileDto profile, IEnumerable<LinkDto> links, IEnumerable<PaymentDto> payments,
-        StatsDto stats,
-        string email)
+        StatsDto stats, string email)
     {
         var linkViewModels = links.Select(dto =>
             new LinkViewModel(dto.Id, dto.User1, dto.User2, dto.IsConfirmed, dto.IsSender));
@@ -53,19 +52,12 @@ public class ProfileController : Controller
             stats.ReportsThisMonthCount);
 
         TargetViewModel? targetModel = null;
-        SubscribeViewModel? subscribeModel = null;
         if (profile.Target != null)
         {
             targetModel = new TargetViewModel(profile.Target.Name, profile.Target.ParticipantsType);
         }
 
-        if (profile.Subscribe != null)
-        {
-            subscribeModel =
-                new SubscribeViewModel(profile.Subscribe.SubscriptionStart, profile.Subscribe.SubscriptionEnd);
-        }
-
-        var model = new ProfileViewModel(email, User.Identity!.Name!, statsViewModel, targetModel, subscribeModel,
+        var model = new ProfileViewModel(email, User.Identity!.Name!, profile.Balance, statsViewModel, targetModel,
             linkViewModels, paymentViewModels);
         return model;
     }

@@ -33,6 +33,7 @@ public class InstagramProfileService : IInstagramProfileService
         }
         catch (RequestException ex)
         {
+            if (ex.ResponseCode == 404) throw new ContentNotFoundException();
             if (string.IsNullOrEmpty(ex.Content)) throw new InstagramRequestException(ex.ResponseCode, null, ex);
             var error = _errorHandler.MapResponse(ex.Content);
             var message = error.Message;

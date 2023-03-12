@@ -8,6 +8,7 @@ public class Transaction : AggregateRoot
 {
     public Transaction(string paymentSystemId, string paymentSystemUrl, decimal amount, Guid userId)
     {
+        if (amount < 100) throw new SmallAmountException();
         PaymentSystemId = paymentSystemId;
         PaymentSystemUrl = paymentSystemUrl;
         Amount = amount;

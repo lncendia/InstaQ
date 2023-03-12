@@ -6,7 +6,6 @@ public abstract class PublicationReportBuilder : ReportBuilder
 {
     public IEnumerable<string>? LinkedUsers { get; private set; }
     public string? Hashtag { get; private set; }
-    public DateTimeOffset? SearchStartDate { get; private set; }
     public int PublicationsCount { get; private set; }
     public int Process { get; private set; }
     public bool AllParticipants { get; private set; }
@@ -22,12 +21,7 @@ public abstract class PublicationReportBuilder : ReportBuilder
         Hashtag = hashtag;
         return this;
     }
-
-    public PublicationReportBuilder WithSearchStartDate(DateTimeOffset searchStartDate)
-    {
-        SearchStartDate = searchStartDate;
-        return this;
-    }
+    
 
     public PublicationReportBuilder WithPublicationsCount(int count)
     {

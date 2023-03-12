@@ -12,7 +12,7 @@ internal static class ModelInitializer
         if (!report.Publications.Any())
         {
             report.Publications = element.Publications.Select(x => new PublicationModel
-                { EntityId = x.Id, ItemId = x.ItemId, Pk = x.Pk, IsLoaded = x.IsLoaded }).ToList();
+                { EntityId = x.Id, OwnerPk = x.OwnerPk, Pk = x.Pk, IsLoaded = x.IsLoaded, Code = x.Code }).ToList();
         }
         else
         {
@@ -25,11 +25,10 @@ internal static class ModelInitializer
         report.Hashtag = element.Hashtag;
         report.Process = element.Process;
         report.AllParticipants = element.AllParticipants;
-        report.SearchStartDate = element.SearchStartDate;
         InitReportModel(report, element);
     }
 
-    internal static void InitReportModel(Model report, Report element)
+    internal static void InitReportModel(ReportModel report, Report element)
     {
         report.Id = element.Id;
         report.Message = element.Message;
@@ -38,5 +37,6 @@ internal static class ModelInitializer
         report.EndDate = element.EndDate;
         report.IsSucceeded = element.IsSucceeded;
         report.StartDate = element.StartDate;
+        report.CountRequests = element.RequestsCount;
     }
 }

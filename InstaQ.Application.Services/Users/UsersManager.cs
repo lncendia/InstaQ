@@ -49,7 +49,7 @@ public class UsersManager : IUsersManager
     {
         var user = await _unitOfWork.UserRepository.Value.GetAsync(userId);
         if (user == null) throw new UserNotFoundException();
-        return new UserDto(user.Name, user.Email, user.Id, user.Subscription?.ExpirationDate);
+        return new UserDto(user.Name, user.Email, user.Id, user.Balance);
     }
 
     public async Task EditAsync(EditUserDto editData)
@@ -87,15 +87,15 @@ public class UsersManager : IUsersManager
         await _userManager.UpdateAsync(userApplication);
     }
 
-    public async Task AddSubscribeAsync(Guid userId, TimeSpan timeSpan)
+    public async Task ChangeBalanceAsync(Guid userId, decimal balance)
     {
         var user = await _unitOfWork.UserRepository.Value.GetAsync(userId);
         if (user == null) throw new UserNotFoundException();
-        user.AddSubscription(timeSpan);
+        user.Balance = balance;
         await _unitOfWork.UserRepository.Value.UpdateAsync(user);
         await _unitOfWork.SaveChangesAsync();
     }
-    
+
     public async Task<UserData> GetAuthenticationDataAsync(Guid userId)
     {
         var user = await _unitOfWork.UserRepository.Value.GetAsync(userId);

@@ -10,6 +10,6 @@ public class LikeReportMapper : IReportMapperUnit<LikeReportDto, LikeReportViewM
     {
         return new LikeReportViewModel(report.Id, report.CreationDate, report.StartDate, report.EndDate,
             report.IsStarted, report.IsCompleted, report.IsSucceeded, report.Message, report.ElementsCount,
-            report.Hashtag, report.SearchStartDate, report.Process, report.PublicationsCount);
+            report.Hashtag, report.Process, report.PublicationsCount);
     }
 }

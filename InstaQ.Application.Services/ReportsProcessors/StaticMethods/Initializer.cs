@@ -1,5 +1,4 @@
-﻿using InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
-using InstaQ.Application.Abstractions.ReportsProcessors.Exceptions;
+﻿using InstaQ.Application.Abstractions.ReportsProcessors.Exceptions;
 using InstaQ.Domain.Abstractions.UnitOfWorks;
 using InstaQ.Domain.Participants.Entities;
 using InstaQ.Domain.Participants.Specification;
@@ -16,13 +15,6 @@ namespace InstaQ.Application.Services.ReportsProcessors.StaticMethods;
 
 internal static class Initializer
 {
-    public static async Task<IEnumerable<PublicationDto>> GetPublicationsAsync(PublicationReport report, IPublicationsService publicationGetterService, CancellationToken token)
-    {
-        var publications =
-            await publicationGetterService.GetAsync(report.Hashtag, 500, token);
-        return publications.Select(x => new PublicationDto(x.PublicationId, x.OwnerId));
-    }
-
     ///<exception cref="LinkedUserNotFoundException">User in coauthors list not found</exception>
     public static async Task<IEnumerable<ChatParticipants>> GetParticipantsAsync(PublicationReport report,
         IUnitOfWork unitOfWork)

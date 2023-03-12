@@ -23,10 +23,12 @@ public class ReportLog : AggregateRoot
     public bool? Success { get; private set; }
     public string AdditionalInfo { get; }
     public bool IsFinished => FinishedAt.HasValue;
+    public decimal? Amount { get; private set; }
 
-    public void Finish(bool success, DateTimeOffset finishedAt)
+    public void Finish(bool success, decimal amount, DateTimeOffset finishedAt)
     {
         Success = success;
+        Amount = amount;
         FinishedAt = finishedAt;
     }
 

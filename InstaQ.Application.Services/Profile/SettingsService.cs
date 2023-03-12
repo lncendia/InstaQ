@@ -1,5 +1,4 @@
-﻿using InstaQ.Application.Abstractions.InstagramRequests.DTOs;
-using InstaQ.Application.Abstractions.InstagramRequests.Exceptions;
+﻿using InstaQ.Application.Abstractions.InstagramRequests.Exceptions;
 using InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
 using InstaQ.Application.Abstractions.Profile.Exceptions;
 using Microsoft.AspNetCore.Identity;
@@ -14,20 +13,22 @@ using UserNotFoundException = InstaQ.Application.Abstractions.Users.Exceptions.U
 
 namespace InstaQ.Application.Services.Profile;
 
-public class UserSettingsService : IUserSettingsService
+public class SettingsService : ISettingsService
 {
     private readonly UserManager<UserData> _userManager;
     private readonly IEmailService _emailService;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IInstagramProfileService _pkService;
+    private readonly decimal _amount;
 
-    public UserSettingsService(UserManager<UserData> userManager, IEmailService emailService, IUnitOfWork unitOfWork,
-        IInstagramProfileService pkService)
+    public SettingsService(UserManager<UserData> userManager, IEmailService emailService, IUnitOfWork unitOfWork,
+        IInstagramProfileService pkService, decimal amount)
     {
         _userManager = userManager;
         _emailService = emailService;
         _unitOfWork = unitOfWork;
         _pkService = pkService;
+        _amount = amount;
     }
 
     public async Task RequestResetEmailAsync(Guid userId, string newEmail, string resetUrl)
@@ -116,20 +117,23 @@ public class UserSettingsService : IUserSettingsService
     {
         var user = await _unitOfWork.UserRepository.Value.GetAsync(userId);
         if (user == null) throw new UserNotFoundException();
+        if (user.Balance < _amount) throw new InsufficientFundsException(userId);
 
         try
         {
             var profile = await _pkService.GetAsync(target);
             if (profile.IsPrivate) throw new ProfilePrivateException(target);
-            if (type == ParticipantsType.Followers && profile.FollowersCount == 0) throw new ProfileEmptyException(type);
-            if (type == ParticipantsType.Followings && profile.FollowingsCount == 0) throw new ProfileEmptyException(type);
-            user.SetTarget(profile.Pk, target, type);
+            if (type == ParticipantsType.Followers && profile.FollowersCount == 0)
+                throw new ProfileEmptyException(type);
+            if (type == ParticipantsType.Followings && profile.FollowingsCount == 0)
+                throw new ProfileEmptyException(type);
+            user.SetTarget(profile.Pk, target, type, _amount);
             await _unitOfWork.UserRepository.Value.UpdateAsync(user);
             await _unitOfWork.SaveChangesAsync();
         }
-        catch (InstagramRequestException ex)
+        catch (ContentNotFoundException)
         {
-            if (ex.Code == 404) throw new UserNotFoundException();
+            throw new UserNotFoundException();
         }
     }
 }

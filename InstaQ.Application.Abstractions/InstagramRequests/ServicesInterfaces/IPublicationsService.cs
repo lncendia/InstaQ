@@ -4,5 +4,5 @@ namespace InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
 
 public interface IPublicationsService
 {
-    Task<List<PublicationDto>> GetAsync(string hashtag, int count, CancellationToken token);
+    Task<PublicationsResultDto> GetAsync(string hashtag, int count, CancellationToken token);
 }

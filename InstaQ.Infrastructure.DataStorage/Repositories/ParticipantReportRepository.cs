@@ -60,7 +60,7 @@ internal class ParticipantReportRepository : IParticipantReportRepository
         if (model != null)
         {
             _context.Remove(model);
-            _context.Notifications.Add(new ReportDeletedEvent(id));
+            _context.Notifications.Add(new ReportDeletedEvent(id, model.UserId, model.CountRequests));
         }
     }
 

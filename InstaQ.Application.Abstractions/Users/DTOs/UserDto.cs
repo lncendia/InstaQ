@@ -2,16 +2,16 @@
 
 public class UserDto
 {
-    public UserDto(string username, string email, Guid id, DateTimeOffset? endOfSubscribe)
+    public UserDto(string username, string email, Guid id, decimal balance)
     {
         Username = username;
         Email = email;
         Id = id;
-        EndOfSubscribe = endOfSubscribe;
+        Balance = balance;
     }
 
     public Guid Id { get; }
     public string Username { get; }
     public string Email { get; }
-    public DateTimeOffset? EndOfSubscribe { get; }
+    public decimal Balance { get; }
 }

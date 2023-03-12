@@ -17,12 +17,6 @@
             <label asp-for="AllParticipants"></label>
         </div>
         <div class="mt-3">
-            <label asp-for="SearchStartDate"></label>
-            <input asp-for="SearchStartDate" class="form-control"/>
-            <span asp-validation-for="SearchStartDate" class="text-danger"></span>
-            <span>Укажите, если хотите получать публикации относительно даты</span>
-        </div>
-        <div class="mt-3">
             <label class="d-block" asp-for="CoAuthors"></label>
             <select id="select1" class="form-select" asp-for="CoAuthors" style="width: 100%" asp-items="selectedListItems" multiple="multiple">
             </select>

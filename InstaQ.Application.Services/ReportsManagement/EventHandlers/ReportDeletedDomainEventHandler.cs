@@ -8,8 +8,13 @@ namespace InstaQ.Application.Services.ReportsManagement.EventHandlers;
 public class ReportDeletedDomainEventHandler : INotificationHandler<ReportDeletedEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly decimal _costOfRequest;
 
-    public ReportDeletedDomainEventHandler(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+    public ReportDeletedDomainEventHandler(IUnitOfWork unitOfWork, decimal costOfRequest)
+    {
+        _unitOfWork = unitOfWork;
+        _costOfRequest = costOfRequest;
+    }
 
     public async Task Handle(ReportDeletedEvent notification, CancellationToken cancellationToken)
     {
@@ -18,7 +23,7 @@ public class ReportDeletedDomainEventHandler : INotificationHandler<ReportDelete
         foreach (var log in logs)
         {
             log.ReportDeleted();
-            if (!log.IsFinished) log.Finish(false, DateTimeOffset.Now);
+            if (!log.IsFinished) log.Finish(false, notification.CountRequests * _costOfRequest, DateTimeOffset.Now);
 
             await _unitOfWork.ReportLogRepository.Value.UpdateAsync(log);
         }

@@ -1,4 +1,5 @@
-﻿using InstaQ.Domain.ReportLogs.Enums;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using InstaQ.Domain.ReportLogs.Enums;
 using InstaQ.Infrastructure.DataStorage.Models.Abstractions;
 
 namespace InstaQ.Infrastructure.DataStorage.Models;
@@ -14,4 +15,5 @@ public class LogModel : IAggregateModel
     public DateTimeOffset? FinishedAt { get; set; }
     public bool? Success { get; set; }
     public string AdditionalInfo { get; set; } = null!;
+    [Column(TypeName = "money")] public decimal? Amount { get; set; }
 }

@@ -1,4 +1,5 @@
-﻿using InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
+﻿using InstaQ.Application.Abstractions.InstagramRequests.Exceptions;
+using InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
 using InstaQ.Application.Abstractions.ReportsProcessors.ServicesInterfaces;
 using InstaQ.Domain.Reposts.BaseReport.Exceptions;
 using InstaQ.Domain.Reposts.ParticipantReport.Entities;
@@ -22,14 +23,16 @@ public class ParticipantReportProcessor : IReportProcessorUnit<ParticipantReport
 
         var task = report.Type switch
         {
-            ParticipantsType.Followers => _participantsGetterService.GetFollowersAsync(report.Pk, 400, token),
-            ParticipantsType.Followings => _participantsGetterService.GetFollowingsAsync(report.Pk, 400, token),
+            ParticipantsType.Followers => _participantsGetterService.GetFollowersAsync(report.Pk, 500, token),
+            ParticipantsType.Followings => _participantsGetterService.GetFollowingsAsync(report.Pk, 500, token),
             _ => throw new ArgumentOutOfRangeException()
         };
-        var participants = await task;
-        foreach (var participantDto in participants)
+        var result = await task;
+        foreach (var participantDto in result.Participants)
         {
             report.ProcessParticipantInfo(participantDto.Pk, participantDto.Name);
         }
+
+        report.AddRequests(result.CountRequests);
     }
 }

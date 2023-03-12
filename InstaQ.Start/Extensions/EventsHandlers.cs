@@ -13,18 +13,21 @@ internal static class EventsHandlers
     internal static void AddEventsHandlers(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddMediatR(typeof(Program).Assembly);
-        var amount = configuration.GetValue<decimal>("Payments:SubscribeCost");
-        services.AddTransient<INotificationHandler<TransactionAcceptedEvent>, TransactionAcceptedDomainEventHandler>(
-            x =>
-            {
-                var uow = x.GetRequiredService<IUnitOfWork>();
-                return new TransactionAcceptedDomainEventHandler(uow, amount);
-            });
+        var amount = configuration.GetValue<decimal>("Payments:RequestPrice");
+        services.AddTransient<INotificationHandler<TransactionAcceptedEvent>, TransactionAcceptedDomainEventHandler>();
         services
             .AddTransient<INotificationHandler<ParticipantReportFinishedEvent>,
                 ParticipantReportFinishedDomainEventHandler>();
         services.AddTransient<INotificationHandler<ReportCreatedEvent>, ReportCreatedDomainEventHandler>();
-        services.AddTransient<INotificationHandler<ReportFinishedEvent>, ReportFinishedDomainEventHandler>();
-        services.AddTransient<INotificationHandler<ReportDeletedEvent>, ReportDeletedDomainEventHandler>();
+
+        services.AddTransient<INotificationHandler<ReportFinishedEvent>, ReportFinishedDomainEventHandler>(x =>
+            new ReportFinishedDomainEventHandler(x.GetRequiredService<IUnitOfWork>(), amount));
+        services.AddTransient<INotificationHandler<ReportFinishedEvent>, BalanceWithdrawalDomainEventHandler>(x =>
+            new BalanceWithdrawalDomainEventHandler(x.GetRequiredService<IUnitOfWork>(), amount));
+        
+        services.AddTransient<INotificationHandler<ReportDeletedEvent>, ReportDeletedDomainEventHandler>(x =>
+            new ReportDeletedDomainEventHandler(x.GetRequiredService<IUnitOfWork>(), amount));
+        services.AddTransient<INotificationHandler<ReportDeletedEvent>, BalanceWithdrawalCanceledReportDomainEventHandler>(x =>
+            new BalanceWithdrawalCanceledReportDomainEventHandler(x.GetRequiredService<IUnitOfWork>(), amount));
     }
 }

@@ -41,7 +41,7 @@ public class ReportCreationService : IReportCreationService
             if (links!.Count < dto.CoAuthors.Count) throw new LinkNotFoundException();
         }
 
-        var report = new LikeReport(user, dto.Hashtag, dto.AllParticipants, dto.SearchStartDate, links);
+        var report = new LikeReport(user, dto.Hashtag, dto.AllParticipants, links);
         await _unitOfWork.LikeReportRepository.Value.AddAsync(report);
         await _unitOfWork.SaveChangesAsync();
         DateTimeOffset? startDate = startAt.HasValue ? DateTimeOffset.Now.Add(startAt.Value) : null;
@@ -60,7 +60,7 @@ public class ReportCreationService : IReportCreationService
             if (links!.Count < dto.CoAuthors.Count) throw new LinkNotFoundException();
         }
 
-        var report = new CommentReport(user, dto.Hashtag, dto.AllParticipants, dto.SearchStartDate, links);
+        var report = new CommentReport(user, dto.Hashtag, dto.AllParticipants, links);
         await _unitOfWork.CommentReportRepository.Value.AddAsync(report);
         await _unitOfWork.SaveChangesAsync();
         DateTimeOffset? startDate = startAt.HasValue ? DateTimeOffset.Now.Add(startAt.Value) : null;

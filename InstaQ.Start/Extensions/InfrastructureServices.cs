@@ -1,10 +1,8 @@
-﻿using InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
-using InstaQ.Application.Abstractions.Payments.ServicesInterfaces;
+﻿using InstaQ.Application.Abstractions.Payments.ServicesInterfaces;
 using InstaQ.Application.Abstractions.Users.ServicesInterfaces;
 using InstaQ.Start.Exceptions;
 using InstaQ.Infrastructure.Mailing;
 using InstaQ.Infrastructure.PaymentSystem.Services;
-using InstaQ.Infrastructure.InstagramRequests.Services;
 
 namespace InstaQ.Start.Extensions;
 
@@ -20,8 +18,6 @@ internal static class InfrastructureServices
                        throw new ConfigurationException("SMTP:Password");
         var host = configuration.GetValue<string>("SMTP:Host") ?? throw new ConfigurationException("SMTP:Host");
         var port = configuration.GetValue<int?>("SMTP:Port") ?? throw new ConfigurationException("SMTP:Port");
-        var token = configuration.GetValue<string>("AntiCaptchaToken") ??
-                    throw new ConfigurationException("AntiCaptchaToken");
 
 
         services.AddScoped<IPaymentCreatorService, TestPaymentService>();

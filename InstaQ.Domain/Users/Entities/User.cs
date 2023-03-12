@@ -17,7 +17,7 @@ public class User : AggregateRoot
         Email = email;
     }
 
-    public Subscription? Subscription { get; private set; }
+    public decimal Balance { get; set; }
     public Target? Target { get; private set; }
 
     private string _email;
@@ -53,21 +53,10 @@ public class User : AggregateRoot
         }
     }
 
-    /// <exception cref="InvalidOperationException"></exception>
-    public void AddSubscription(TimeSpan timeSpan)
+    public void SetTarget(string pk, string username, ParticipantsType type, decimal cost)
     {
-        if (timeSpan.Ticks <= 0) throw new InvalidOperationException("Time span must be positive");
-        var offset = Subscription is {IsExpired: false} ? Subscription.ExpirationDate : DateTimeOffset.Now;
-        Subscription = new Subscription(offset.Add(timeSpan), Subscription?.SubscriptionDate);
-    }
-
-    public bool IsSubscribed => Subscription is {IsExpired: false};
-
-    public void SetTarget(string pk, string username, ParticipantsType type)
-    {
-        var dateComparison = DateTimeOffset.Now.AddDays(-1);
-        if (Target != null && Target.SetDate > dateComparison)
-            throw new TargetChangeException(Target.SetDate - dateComparison);
+        if (Balance < cost) throw new InsufficientFundsException(Id);
+        Balance -= cost;
         Target = new Target(pk, username, type);
     }
 }

@@ -10,5 +10,5 @@ public interface IUsersManager
     Task<UserDto> GetAsync(Guid userId);
     Task EditAsync(EditUserDto editData);
     Task ChangePasswordAsync(string email, string password);
-    Task AddSubscribeAsync(Guid userId, TimeSpan timeSpan);
+    Task ChangeBalanceAsync(Guid userId, decimal balance);
 }

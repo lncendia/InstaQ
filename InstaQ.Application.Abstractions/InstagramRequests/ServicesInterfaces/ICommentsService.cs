@@ -1,6 +1,8 @@
-﻿namespace InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
+﻿using InstaQ.Application.Abstractions.InstagramRequests.DTOs;
+
+namespace InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
 
 public interface ICommentsService
 {
-    Task<List<(string id, string text)>> GetAsync(string id, int count, CancellationToken token);
+    Task<CommentsResultDto> GetAsync(string id, int count, CancellationToken token);
 }

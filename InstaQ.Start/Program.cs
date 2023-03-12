@@ -12,7 +12,7 @@ builder.Services.AddWebServices();
 builder.Services.AddDomainServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddInstagramServices(builder.Configuration);
-builder.Services.AddApplicationServices();
+builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddAuthenticationServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddEventsHandlers(builder.Configuration);

@@ -8,8 +8,13 @@ namespace InstaQ.Application.Services.ReportsManagement.EventHandlers;
 public class ReportFinishedDomainEventHandler : INotificationHandler<ReportFinishedEvent>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly decimal _costOfRequest;
 
-    public ReportFinishedDomainEventHandler(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+    public ReportFinishedDomainEventHandler(IUnitOfWork unitOfWork, decimal costOfRequest)
+    {
+        _unitOfWork = unitOfWork;
+        _costOfRequest = costOfRequest;
+    }
 
     public async Task Handle(ReportFinishedEvent notification, CancellationToken cancellationToken)
     {
@@ -18,7 +23,7 @@ public class ReportFinishedDomainEventHandler : INotificationHandler<ReportFinis
         if (!logs.Any()) throw new ArgumentException("Log not found", nameof(notification));
         foreach (var x in logs)
         {
-            x.Finish(notification.Success, notification.FinishedAt);
+            x.Finish(notification.Success, notification.CountRequests * _costOfRequest, notification.FinishedAt);
             await _unitOfWork.ReportLogRepository.Value.UpdateAsync(x);
         }
     }

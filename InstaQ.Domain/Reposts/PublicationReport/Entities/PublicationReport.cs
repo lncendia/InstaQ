@@ -10,13 +10,11 @@ namespace InstaQ.Domain.Reposts.PublicationReport.Entities;
 
 public abstract class PublicationReport : Report
 {
-    protected internal PublicationReport(User user, string hashtag, bool allParticipants,
-        DateTimeOffset? searchStartDate = null, IReadOnlyCollection<Link>? coAuthors = null) : base(user)
+    protected internal PublicationReport(User user, string hashtag, bool allParticipants, IReadOnlyCollection<Link>? coAuthors = null) : base(user)
     {
         if (!hashtag.StartsWith('#')) hashtag = '#' + hashtag;
         Hashtag = hashtag;
         AllParticipants = allParticipants;
-        SearchStartDate = searchStartDate;
         if (coAuthors == null) return;
         if (coAuthors.Count > 3) throw new TooManyLinksException();
         foreach (var l in coAuthors)
@@ -31,7 +29,6 @@ public abstract class PublicationReport : Report
     private readonly List<Guid> _linkedUsersList = new();
     public IReadOnlyCollection<Guid> LinkedUsers => _linkedUsersList.AsReadOnly();
     public string Hashtag { get; }
-    public DateTimeOffset? SearchStartDate { get; }
     public int Process { get; protected set; }
     public bool AllParticipants { get; }
 
@@ -42,7 +39,7 @@ public abstract class PublicationReport : Report
     private void LoadPublications(IEnumerable<PublicationDto> publications)
     {
         var id = 1;
-        PublicationsList = publications.Select(dto => new Publication(dto.ItemId, dto.Pk, id++)).ToList();
+        PublicationsList = publications.Select(dto => new Publication(dto.Pk, dto.OwnerPk, dto.Code, id++)).ToList();
         if (!publications.Any()) throw new PublicationsListEmptyException();
     }
 

@@ -13,10 +13,6 @@ public class PublicationReportCreateViewModel
     [Display(Name = "Загрузить всех участников")]
     public bool AllParticipants { get; set; }
 
-    [Display(Name = "Укажите дату начала поиска публикаций")]
-    [DataType(DataType.DateTime)]
-    public DateTimeOffset? SearchStartDate { get; set; }
-
     [Display(Name = "Выберите соавторов")] public List<Guid>? CoAuthors { get; set; }
 
     [Display(Name = "Укажите через сколько начать")]

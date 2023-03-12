@@ -20,28 +20,24 @@ using InstaQ.Domain.Users.Specification.Visitor;
 
 namespace InstaQ.Application.Services.Profile;
 
-public class UserProfileService : IProfileService
+public class ProfileService : IProfileService
 {
     private readonly IUnitOfWork _unitOfWork;
 
-    public UserProfileService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
+    public ProfileService(IUnitOfWork unitOfWork) => _unitOfWork = unitOfWork;
 
     public async Task<ProfileDto> GetAsync(Guid userId)
     {
         var user = await _unitOfWork.UserRepository.Value.GetAsync(userId);
         if (user == null) throw new UserNotFoundException();
-        SubscribeDto? subscribe = null;
         TargetDto? target = null;
-        if (user.Subscription != null)
-        {
-            subscribe = new SubscribeDto(user.Subscription.SubscriptionDate, user.Subscription.ExpirationDate);
-        }
 
         if (user.Target != null)
         {
             target = new TargetDto(user.Target.Username, user.Target.ParticipantsType);
         }
-        return new ProfileDto(subscribe, target);
+
+        return new ProfileDto(user.Balance, target);
     }
 
     public async Task<StatsDto> GetStatisticAsync(Guid userId)
@@ -70,7 +66,7 @@ public class UserProfileService : IProfileService
     {
         var links = await _unitOfWork.LinkRepository.Value.FindAsync(new LinkByUserIdSpecification(userId));
         if (!links.Any()) return new List<LinkDto>();
-        var ids = links.SelectMany(l => new[] {l.User1Id, l.User2Id}).Distinct().ToList();
+        var ids = links.SelectMany(l => new[] { l.User1Id, l.User2Id }).Distinct().ToList();
         ISpecification<User, IUserSpecificationVisitor> spec = new UserByIdSpecification(ids.First());
         spec = ids.Skip(1).Aggregate(spec,
             (current, id) =>

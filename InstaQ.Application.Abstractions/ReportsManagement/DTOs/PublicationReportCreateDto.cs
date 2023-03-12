@@ -2,12 +2,10 @@
 
 public class PublicationReportCreateDto
 {
-    public PublicationReportCreateDto(Guid userId, string hashtag, bool allParticipants,
-        DateTimeOffset? searchStartDate, List<Guid>? coAuthors)
+    public PublicationReportCreateDto(Guid userId, string hashtag, bool allParticipants, List<Guid>? coAuthors)
     {
         UserId = userId;
         Hashtag = hashtag;
-        SearchStartDate = searchStartDate;
         CoAuthors = coAuthors;
         AllParticipants = allParticipants;
     }
@@ -15,6 +13,5 @@ public class PublicationReportCreateDto
     public Guid UserId { get; }
     public string Hashtag { get; }
     public bool AllParticipants { get; }
-    public DateTimeOffset? SearchStartDate { get; }
     public List<Guid>? CoAuthors { get; }
 }

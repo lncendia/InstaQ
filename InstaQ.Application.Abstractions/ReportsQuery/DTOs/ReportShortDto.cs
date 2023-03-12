@@ -4,7 +4,8 @@ namespace InstaQ.Application.Abstractions.ReportsQuery.DTOs;
 
 public class ReportShortDto
 {
-    public ReportShortDto(Guid? id, string? hashtag, ReportType type, DateTimeOffset creationDate, DateTimeOffset? endDate, bool isCompleted, bool isSucceeded)
+    public ReportShortDto(Guid? id, string? hashtag, ReportType type, DateTimeOffset creationDate,
+        DateTimeOffset? endDate, bool isCompleted, bool isSucceeded, decimal? amount)
     {
         Id = id;
         Hashtag = hashtag;
@@ -13,6 +14,7 @@ public class ReportShortDto
         EndDate = endDate;
         IsCompleted = isCompleted;
         IsSucceeded = isSucceeded;
+        Amount = amount;
     }
 
     public Guid? Id { get; }
@@ -22,4 +24,5 @@ public class ReportShortDto
     public DateTimeOffset? EndDate { get; }
     public bool IsCompleted { get; }
     public bool IsSucceeded { get; }
+    public decimal? Amount { get; }
 }

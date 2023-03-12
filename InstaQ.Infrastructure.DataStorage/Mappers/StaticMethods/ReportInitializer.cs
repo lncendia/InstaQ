@@ -31,6 +31,9 @@ internal static class Initializer
     private static readonly FieldInfo ReportMessage =
         ReportType.GetField("<Message>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
+    private static readonly FieldInfo ReportCountRequests =
+        ReportType.GetField("<RequestsCount>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
     private static readonly FieldInfo ReportElementsList =
         ReportType.GetField("ReportElementsList", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
@@ -39,10 +42,6 @@ internal static class Initializer
 
     private static readonly FieldInfo ReportHashtag =
         PublicationReportType.GetField("<Hashtag>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
-
-    private static readonly FieldInfo ReportSearchStartDate =
-        PublicationReportType.GetField("<SearchStartDate>k__BackingField",
-            BindingFlags.Instance | BindingFlags.NonPublic)!;
 
     private static readonly FieldInfo ReportPublicationsList =
         PublicationReportType.GetField("PublicationsList", BindingFlags.Instance | BindingFlags.NonPublic)!;
@@ -63,7 +62,6 @@ internal static class Initializer
         ReportAllParticipants.SetValue(report, model.AllParticipants);
         ReportLinkedUsersList.SetValue(report, model.LinkedUsers.Select(x => x.Id).ToList());
         ReportHashtag.SetValue(report, model.Hashtag);
-        ReportSearchStartDate.SetValue(report, model.SearchStartDate);
         ReportPublicationsList.SetValue(report, model.Publications.Select(GetPublication).ToList());
         ReportProcess.SetValue(report, model.Process);
         InitReport(report, elements, model);
@@ -71,7 +69,7 @@ internal static class Initializer
 
     private static Publication GetPublication(PublicationModel model)
     {
-        object?[] args = { model.ItemId, model.Pk, model.EntityId };
+        object?[] args = { model.Pk, model.OwnerPk, model.Code, model.EntityId };
         var publication = (Publication)PublicationType.Assembly.CreateInstance(
             PublicationType.FullName!, false, BindingFlags.Instance | BindingFlags.NonPublic, null, args!,
             null, null)!;
@@ -79,7 +77,7 @@ internal static class Initializer
         return publication;
     }
 
-    internal static void InitReport(Report report, IEnumerable<ReportElement> elements, Model reportModel)
+    internal static void InitReport(Report report, IEnumerable<ReportElement> elements, ReportModel reportModel)
     {
         IdFields.AggregateId.SetValue(report, reportModel.Id);
         ReportUserId.SetValue(report, reportModel.UserId);
@@ -89,6 +87,7 @@ internal static class Initializer
         ReportSucceeded.SetValue(report, reportModel.IsSucceeded);
         ReportMessage.SetValue(report, reportModel.Message);
         ReportElementsList.SetValue(report, elements.ToList());
+        ReportCountRequests.SetValue(report, reportModel.CountRequests);
         IdFields.Events.SetValue(report, new List<IDomainEvent>());
     }
 }

@@ -19,7 +19,7 @@ function GetBadges(el) {
     let html = '<div style="margin: 0 auto;">';
     for (let i = 0; i < el.publications.length; i++) {
         element = el.publications[i];
-        html += '<a class="border border-primary rounded rounded-3 mb-2 px-3 d-inline-block text-decoration-none" href="https://vk.com/feed?w=wall' + element.ownerId + '_' + element.itemId + '">'
+        html += '<a class="border border-primary rounded rounded-3 mb-2 px-3 d-inline-block text-decoration-none" href="https://www.instagram.com/p/' + element.code + '">'
         switch (element.type) {
             case 'NotLoaded':
                 html += '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill text-warning" viewBox="0 0 16 16"><path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4zm.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/></svg>'

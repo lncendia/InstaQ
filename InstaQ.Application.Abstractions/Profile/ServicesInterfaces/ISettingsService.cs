@@ -2,7 +2,7 @@
 
 namespace InstaQ.Application.Abstractions.Profile.ServicesInterfaces;
 
-public interface IUserSettingsService
+public interface ISettingsService
 {
     Task RequestResetEmailAsync(Guid userId, string newEmail, string resetUrl);
     Task ResetEmailAsync(Guid userId, string newEmail, string code);

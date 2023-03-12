@@ -42,7 +42,7 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<LinkModel>().HasOne(x => x.User2).WithMany().OnDelete(DeleteBehavior.ClientCascade);
         modelBuilder.Entity<PublicationReportModel>().HasMany(x => x.LinkedUsers).WithMany();
 
-        modelBuilder.Entity<Model>().UseTpcMappingStrategy();
+        modelBuilder.Entity<ReportModel>().UseTpcMappingStrategy();
         modelBuilder.Entity<ElementModel>().UseTpcMappingStrategy();
         base.OnModelCreating(modelBuilder);
     }

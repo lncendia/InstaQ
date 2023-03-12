@@ -15,9 +15,9 @@ namespace InstaQ.WEB.Controllers;
 [Authorize]
 public class SettingsController : Controller
 {
-    private readonly IUserSettingsService _userService;
+    private readonly ISettingsService _userService;
 
-    public SettingsController(IUserSettingsService userService)
+    public SettingsController(ISettingsService userService)
     {
         _userService = userService;
     }
@@ -58,14 +58,14 @@ public class SettingsController : Controller
     [HttpGet]
     public async Task<IActionResult> AcceptChangeEmail(AcceptChangeEmailViewModel model)
     {
-        if (!ModelState.IsValid) return RedirectToAction("ChangeEmail", new {message = "Ссылка недействительна"});
+        if (!ModelState.IsValid) return RedirectToAction("ChangeEmail", new { message = "Ссылка недействительна" });
 
         try
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             await _userService.ResetEmailAsync(userId, model.Email, model.Code);
             await ChangeClaimAsync(ClaimTypes.Email, model.Email);
-            return RedirectToAction("Index", "Home", new {message = "Почта успешно изменена"});
+            return RedirectToAction("Index", "Home", new { message = "Почта успешно изменена" });
         }
         catch (Exception ex)
         {
@@ -78,7 +78,7 @@ public class SettingsController : Controller
                 _ => "Произошла ошибка при смене почты"
             };
 
-            return RedirectToAction("Index", "Home", new {message = text});
+            return RedirectToAction("Index", "Home", new { message = text });
         }
     }
 
@@ -165,10 +165,9 @@ public class SettingsController : Controller
                 UserNotFoundException => "Пользователь не найден",
                 InstagramNotFoundException => "Инстаграм не найден",
                 ProfilePrivateException => "Профиль цели должен быть открыт",
+                InsufficientFundsException => "Недостаточно средств",
                 ProfileEmptyException exception =>
                     $"У пользователя отстутствуют {(exception.Type == ParticipantsType.Followers ? "подписчики" : "подписки")}",
-                TargetChangeException exception =>
-                    $"Вы сможете изменить цель через {exception.RestTime.Hours}ч. {exception.RestTime.Minutes}м.",
                 _ => "Произошла ошибка при смене цели"
             };
 

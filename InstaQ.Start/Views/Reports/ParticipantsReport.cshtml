@@ -10,12 +10,6 @@
             <th scope="row">Дата создания</th>
             <td>@Model.CreationDate.ToOffset(TimeSpan.FromHours(3)).ToString("G")</td>
         </tr>
-        <tr>
-            <th scope="row">Ссылка</th>
-            <td>
-                <a href="https://vk.com/id@(Model.Pk)">Перейти</a>
-            </td>
-        </tr>
         @if (Model.IsStarted)
         {
             <tr>

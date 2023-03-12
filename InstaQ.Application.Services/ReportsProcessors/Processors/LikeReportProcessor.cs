@@ -27,14 +27,15 @@ public class LikeReportProcessor : IReportProcessorUnit<LikeReport>
             var publication = report.Publications.ElementAt(i);
             try
             {
-                var result = await _publicationInfoService.GetAsync(publication.ItemId, 500, token);
-                report.SetLikes(new LikesDto(publication.ItemId, publication.Pk, result));
+                var result = await _publicationInfoService.GetAsync(publication.Pk, 500, token);
+                report.SetLikes(new LikesDto(publication.Pk, result.Likes));
+                report.AddRequests(result.CountRequests);
                 count = 0;
             }
             catch (InstagramRequestException exception)
             {
                 count++;
-                report.SetLikes(new LikesDto(publication.ItemId, publication.Pk));
+                report.SetLikes(new LikesDto(publication.Pk));
                 if (count > 5) throw new TooManyRequestErrorsException(exception.Message);
             }
 

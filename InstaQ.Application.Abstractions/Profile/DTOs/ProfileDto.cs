@@ -4,26 +4,14 @@ namespace InstaQ.Application.Abstractions.Profile.DTOs;
 
 public class ProfileDto
 {
-    public ProfileDto(SubscribeDto? subscribe, TargetDto? target)
+    public ProfileDto(decimal balance, TargetDto? target)
     {
-        Subscribe = subscribe;
+        Balance = balance;
         Target = target;
     }
 
-    public SubscribeDto? Subscribe { get; }
+    public decimal Balance { get; }
     public TargetDto? Target { get; }
-}
-
-public class SubscribeDto
-{
-    public SubscribeDto(DateTimeOffset subscriptionStart, DateTimeOffset subscriptionEnd)
-    {
-        SubscriptionStart = subscriptionStart;
-        SubscriptionEnd = subscriptionEnd;
-    }
-
-    public DateTimeOffset SubscriptionStart { get; }
-    public DateTimeOffset SubscriptionEnd { get; }
 }
 
 public class TargetDto

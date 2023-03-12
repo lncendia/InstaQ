@@ -2,16 +2,16 @@
 
 public class PublicationDto
 {
-    public PublicationDto(int id, string itemId, string pk, bool isLoaded)
+    public PublicationDto(int id, string ownerPk, string code, bool isLoaded)
     {
         Id = id;
-        ItemId = itemId;
-        Pk = pk;
+        OwnerPk = ownerPk;
         IsLoaded = isLoaded;
+        Code = code;
     }
 
     public int Id { get; }
-    public string ItemId { get; }
-    public string Pk { get; }
+    public string OwnerPk { get; }
+    public string Code { get; }
     public bool IsLoaded { get; }
 }

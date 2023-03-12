@@ -14,7 +14,7 @@ internal class LogMapper : IAggregateMapperUnit<ReportLog, LogModel>
         IdFields.AggregateId.SetValue(reportLog, model.Id);
         if (model.FinishedAt.HasValue)
         {
-            reportLog.Finish(model.Success!.Value, model.FinishedAt.Value);
+            reportLog.Finish(model.Success!.Value, model.Amount!.Value, model.FinishedAt.Value);
         }
 
         if (!model.ReportId.HasValue) reportLog.ReportDeleted();

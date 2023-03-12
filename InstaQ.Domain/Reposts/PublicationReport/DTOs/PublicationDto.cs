@@ -2,12 +2,14 @@
 
 public class PublicationDto
 {
-    public PublicationDto(string itemId, string pk)
+    public PublicationDto(string pk, string ownerPk, string code)
     {
-        ItemId = itemId;
+        OwnerPk = ownerPk;
+        Code = code;
         Pk = pk;
     }
 
-    public string ItemId { get; }
+    public string OwnerPk { get; }
     public string Pk { get; }
+    public string Code { get; }
 }

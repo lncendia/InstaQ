@@ -21,36 +21,44 @@ public class PublicationsService : IPublicationsService
         _errorHandler = errorHandler;
     }
 
-    private async Task GetPublicationsPageAsync(List<PublicationModel> items, string query, int count, string? nextFrom,
+    private async Task<int> GetPublicationsPageAsync(List<PublicationModel> items, string query, int count,
         CancellationToken token)
     {
-        if (items.Count >= count) return;
-        var countRequest = count - items.Count;
-        if (countRequest > 100) countRequest = 100;
+        int countRequests = 0;
+        string? nextFrom = null;
+        do
+        {
+            var countRequest = count - items.Count;
+            if (countRequest > 100) countRequest = 100;
 
-        var queryParams = new Dictionary<string, string?>
-            {{"name", query}, {"max_amount", countRequest.ToString()}, {"max_id", nextFrom}};
-        var response = await _requestSender.SendAsync("v1/hashtag/medias/recent/chunk", queryParams, token);
-        var data = _handler.MapResponse(response);
-        items.AddRange(data.Item1);
-        if (string.IsNullOrEmpty(data.Item2)) return;
-        await GetPublicationsPageAsync(items, query, count, data.Item2, token);
+            var queryParams = new Dictionary<string, string?>
+                { { "name", query }, { "max_amount", countRequest.ToString() }, { "max_id", nextFrom } };
+            var response = await _requestSender.SendAsync("v1/hashtag/medias/recent/chunk", queryParams, token);
+            var data = _handler.MapResponse(response);
+            items.AddRange(data.Item1);
+            nextFrom = nextFrom != data.Item2 ? data.Item2 : null;
+            countRequests++;
+        } while (!string.IsNullOrEmpty(nextFrom) && items.Count < count);
+
+        return countRequests;
     }
 
 
-    public async Task<List<PublicationDto>> GetAsync(string hashtag, int count, CancellationToken token)
+    public async Task<PublicationsResultDto> GetAsync(string hashtag, int count, CancellationToken token)
     {
         if (count < 1) throw new ArgumentException("Count can't be less then zero.");
 
         var publications = new List<PublicationModel>();
         try
         {
-            await GetPublicationsPageAsync(publications, hashtag, count, null, token);
-            var list = publications.Select(item => new PublicationDto(item.Pk, item.User.Pk)).ToList();
-            return list;
+            var countRequests = await GetPublicationsPageAsync(publications, hashtag, count, token);
+            var list = publications.DistinctBy(x => x.Pk)
+                .Select(item => new PublicationDto(item.Pk, item.User.Pk, item.Code, item.LikeCount, item.CommentCount, item.CommentsDisabled)).ToList();
+            return new PublicationsResultDto(list, countRequests);
         }
         catch (RequestException ex)
         {
+            if (ex.ResponseCode == 404) return new PublicationsResultDto(new List<PublicationDto>(), 1);
             if (string.IsNullOrEmpty(ex.Content)) throw new InstagramRequestException(ex.ResponseCode, null, ex);
             var error = _errorHandler.MapResponse(ex.Content);
             var message = error.Message;

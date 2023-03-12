@@ -32,11 +32,7 @@
             </div>
             <div class="col-12">
                 <div class="collapse multi-collapse" id="multiCollapseExample5">
-                    @if (Model.EndOfSubscribe.HasValue)
-                    {
-                        <div class="mb-1">Подписка действует до @Model.EndOfSubscribe.Value.ToOffset(TimeSpan.FromHours(3)).ToString("d")</div>
-                    }
-                    @await Html.PartialAsync("AddSubscribe", new AddSubscribeViewModel {Id = Model.Id})
+                    @await Html.PartialAsync("AddSubscribe", new ChangeBalanceViewModel {Id = Model.Id, Balance = Model.Balance})
                 </div>
             </div>
         </div>

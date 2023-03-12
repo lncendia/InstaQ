@@ -51,7 +51,7 @@ public class ReportsController : Controller
     }
 
     private static ReportShortViewModel Map(ReportShortDto dto) =>
-        new(dto.Id, dto.Hashtag, dto.Type, dto.CreationDate, dto.EndDate, dto.IsCompleted, dto.IsSucceeded);
+        new(dto.Id, dto.Hashtag, dto.Type, dto.CreationDate, dto.EndDate, dto.IsCompleted, dto.IsSucceeded, dto.Amount);
 
 
     [HttpGet]

@@ -119,8 +119,8 @@ public class ElementManager : IReportElementManager
     }
 
 
-    private static PublicationDto Map(Publication publication) => new(publication.Id, publication.ItemId,
-        publication.Pk, publication.IsLoaded!.Value);
+    private static PublicationDto Map(Publication publication) => new(publication.Id, publication.OwnerPk,
+        publication.Code, publication.IsLoaded!.Value);
 
     private static bool IsPublicationElementValid(PublicationReportElement element, PublicationElementSearchQuery query)
     {
@@ -129,17 +129,17 @@ public class ElementManager : IReportElementManager
 
         if (query.Vip.HasValue && element.Vip != query.Vip.Value)
             return false;
-        
+
         if (!string.IsNullOrEmpty(query.LikeChatName) && !element.LikeChatName.Contains(query.LikeChatName))
             return false;
-        
+
         if (!string.IsNullOrEmpty(query.NameNormalized))
         {
             var b1 = element.Name.ToUpper().Contains(query.NameNormalized);
             var b2 = element.Pk.Contains(query.NameNormalized);
             if (!(b1 || b2)) return false;
         }
-        
+
         return true;
     }
 

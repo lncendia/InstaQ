@@ -14,8 +14,7 @@ namespace InstaQ.Domain.Reposts.CommentReport.Entities;
 
 public class CommentReport : PublicationReport.Entities.PublicationReport
 {
-    public CommentReport(User user, string hashtag, bool allParticipants, DateTimeOffset? startDate = null,
-        IReadOnlyCollection<Link>? coAuthors = null) : base(user, hashtag, allParticipants, startDate, coAuthors)
+    public CommentReport(User user, string hashtag, bool allParticipants, IReadOnlyCollection<Link>? coAuthors = null) : base(user, hashtag, allParticipants, coAuthors)
     {
         AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] { UserId }), Id, ReportType.Comments,
             CreationDate, Hashtag));
@@ -72,7 +71,7 @@ public class CommentReport : PublicationReport.Entities.PublicationReport
         if (!IsStarted) throw new ReportNotStartedException(Id);
         if (IsCompleted) throw new ReportAlreadyCompletedException(Id);
         var publication =
-            PublicationsList.FirstOrDefault(x => x.ItemId == comments.PublicationId && x.Pk == comments.OwnerId);
+            PublicationsList.FirstOrDefault(x => x.Pk == comments.Pk);
         if (publication == null) throw new PublicationNotFoundException();
         publication.IsLoaded = comments.SuccessLoaded;
         var nodes = ReportElementsList.Cast<CommentReportElement>();

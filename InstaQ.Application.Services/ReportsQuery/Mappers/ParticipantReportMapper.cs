@@ -9,7 +9,6 @@ public class ParticipantReportMapper : IReportMapperUnit<ParticipantReportDto, P
     public ParticipantReportDto Map(ParticipantReport report)
     {
         var builder = (ParticipantReportBuilder)ParticipantReportBuilder.ParticipantReportDto()
-            .WithVk(report.Pk)
             .WithId(report.Id)
             .WithCreationDate(report.CreationDate)
             .WithElements(report.Participants.Count);

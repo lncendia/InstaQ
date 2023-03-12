@@ -35,10 +35,8 @@ public class PaymentController : Controller
         {
             var text = ex switch
             {
-                TransactionNotFoundException => "Счёт не найден",
-                BillNotPaidException => "Счёт не оплачен",
-                TransactionAlreadyAcceptedException => "Счёт уже подтверждён",
-                ErrorCheckBillException => "Ошибка при отправке запроса на проверку оплаты",
+                SmallAmountException => "Сумма должна быть не меньше ста рублей",
+                ErrorCreateBillException => "Ошибка при создании счёта",
                 _ => "Произошла ошибка при выставлении счёта"
             };
             return BadRequest(text);

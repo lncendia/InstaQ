@@ -14,8 +14,8 @@ namespace InstaQ.Domain.Reposts.LikeReport.Entities;
 
 public class LikeReport : PublicationReport.Entities.PublicationReport
 {
-    public LikeReport(User user, string hashtag, bool allParticipants, DateTimeOffset? startDate = null,
-        IReadOnlyCollection<Link>? coAuthors = null) : base(user, hashtag, allParticipants, startDate, coAuthors)
+    public LikeReport(User user, string hashtag, bool allParticipants, IReadOnlyCollection<Link>? coAuthors = null) :
+        base(user, hashtag, allParticipants, coAuthors)
     {
         AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] { UserId }), Id, ReportType.Likes, CreationDate,
             Hashtag));
@@ -70,7 +70,7 @@ public class LikeReport : PublicationReport.Entities.PublicationReport
         if (!IsStarted) throw new ReportNotStartedException(Id);
         if (IsCompleted) throw new ReportAlreadyCompletedException(Id);
         var publication =
-            PublicationsList.FirstOrDefault(x => x.ItemId == likes.PublicationId && x.Pk == likes.Pk);
+            PublicationsList.FirstOrDefault(x => x.Pk == likes.Pk);
         if (publication == null) throw new PublicationNotFoundException();
         publication.IsLoaded = likes.SuccessLoaded;
         var nodes = ReportElementsList.Cast<LikeReportElement>();

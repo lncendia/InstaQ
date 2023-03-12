@@ -45,7 +45,7 @@ public class ReportManager : IReportManager
                 new DescendingOrder<ReportLog, IReportLogSortingVisitor>(new LogByDateOrder()), (query.Page - 1) * 15,
                 15);
         return reports.Select(x => new ReportShortDto(x.ReportId, x.AdditionalInfo, x.Type, x.CreatedAt, x.FinishedAt,
-            x.IsFinished, x.Success ?? false)).ToList();
+            x.IsFinished, x.Success ?? false, x.Amount)).ToList();
     }
 
     public async Task<LikeReportDto> GetLikeReportAsync(Guid userId, Guid reportId)

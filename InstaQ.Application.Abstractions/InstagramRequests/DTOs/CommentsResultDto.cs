@@ -1,15 +1,11 @@
 ﻿namespace InstaQ.Application.Abstractions.InstagramRequests.DTOs;
 
-public class CommentsResultDto
+public class CommentsResultDto : ResultDto
 {
-    public CommentsResultDto(long ownerId, long publicationId, List<(long, string)> comments)
+    public CommentsResultDto(List<(string, string)> comments, int countRequests) : base(countRequests)
     {
-        PublicationId = publicationId;
         Comments = comments;
-        OwnerId = ownerId;
     }
 
-    public long OwnerId { get; }
-    public long PublicationId { get; }
-    public List<(long, string)> Comments { get; }
+    public List<(string, string)> Comments { get; }
 }

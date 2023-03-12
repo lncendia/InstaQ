@@ -4,13 +4,15 @@ namespace InstaQ.Domain.Reposts.PublicationReport.Entities;
 
 public class Publication : Entity
 {
-    internal Publication(string itemId, string pk, int id) : base(id)
+    internal Publication(string pk, string ownerPk, string code, int id) : base(id)
     {
-        ItemId = itemId;
+        OwnerPk = ownerPk;
+        Code = code;
         Pk = pk;
     }
 
-    public string ItemId { get; }
+    public string OwnerPk { get; }
     public string Pk { get; }
+    public string Code { get; }
     public bool? IsLoaded { get; internal set; }
 }

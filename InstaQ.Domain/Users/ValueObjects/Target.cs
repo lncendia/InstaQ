@@ -9,11 +9,9 @@ public class Target
         Pk = pk;
         ParticipantsType = type;
         Username = username;
-        SetDate = DateTimeOffset.Now;
     }
 
     public string Pk { get; }
     public string Username { get; }
-    public DateTimeOffset SetDate { get; }
     public ParticipantsType ParticipantsType { get; }
 }

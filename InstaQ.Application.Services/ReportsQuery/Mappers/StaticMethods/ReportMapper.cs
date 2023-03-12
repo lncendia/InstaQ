@@ -11,7 +11,6 @@ internal static class ReportMapper
             .WithHashtag(report.Hashtag)
             .WithId(report.Id)
             .WithCreationDate(report.CreationDate);
-        if (report.SearchStartDate != null) builder.WithSearchStartDate(report.SearchStartDate.Value);
         if (report.AllParticipants) builder.WithAllParticipantsOption();
 
         if (!report.IsStarted) return;

@@ -2,23 +2,20 @@
 
 public class CommentsDto
 {
-    public CommentsDto(string publicationId, string pk, IReadOnlyCollection<(string, string)> comments)
+    public CommentsDto(string pk, IReadOnlyCollection<(string, string)> comments)
     {
-        PublicationId = publicationId;
+        Pk = pk;
         Comments = comments;
         SuccessLoaded = true;
-        OwnerId = pk;
     }
 
-    public CommentsDto(string publicationId, string pk)
+    public CommentsDto(string pk)
     {
-        PublicationId = publicationId;
-        OwnerId = pk;
+        Pk = pk;
         SuccessLoaded = false;
     }
-
-    public string OwnerId { get; }
-    public string PublicationId { get; }
+    
+    public string Pk { get; }
     public IReadOnlyCollection<(string, string)>? Comments { get; }
     public bool SuccessLoaded { get; }
 }

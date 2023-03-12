@@ -22,17 +22,13 @@
                 var type = Model.Target.Type == ParticipantsType.Followers ? "Подписчики" : "Подписки";
                 <div class="col-4">
                     <h6 class="d-inline-block" style="margin-bottom: 0.5rem;">Цель: </h6>
-                    <a href="https://vk.com/id@(Model.Target!.TargetName)">Перейти</a>
+                    <a href="https://www.instagram.com/@(Model.Target!.TargetName)">Перейти</a>
                     <h6>Тип: @type</h6>
                 </div>
             }
-            @if (Model.Subscribe != null)
-            {
-                <div class="col-4">
-                    <h6>Подписан с: @Model.Subscribe.SubscriptionStart.ToOffset(TimeSpan.FromHours(3)).ToString("d")</h6>
-                    <h6>Подписан до: @Model.Subscribe.SubscriptionEnd.ToOffset(TimeSpan.FromHours(3)).ToString("d")</h6>
-                </div>
-            }
+            <div class="col-4">
+                <h6>Баланс: @Model.Balance.ToString("C")</h6>
+            </div>
         </div>
     </div>
 </div>
@@ -46,7 +42,7 @@
                     <button class="btn menu-button btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample2" aria-expanded="false" aria-controls="multiCollapseExample2">Смена пароля</button>
                 </p>
                 <div class="collapse multi-collapse" id="multiCollapseExample1">
-                    @await Html.PartialAsync("ChangeEmail", new ChangeEmailViewModel {Email = Model.Email})
+                    @await Html.PartialAsync("ChangeEmail", new ChangeEmailViewModel { Email = Model.Email })
                 </div>
                 <div class="collapse multi-collapse" id="multiCollapseExample2">
                     @await Html.PartialAsync("ChangePassword", new ChangePasswordViewModel())
@@ -60,10 +56,10 @@
                     <button class="btn menu-button btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#multiCollapseExample3" aria-expanded="false" aria-controls="multiCollapseExample3">Смена цели</button>
                 </p>
                 <div class="collapse multi-collapse" id="multiCollapseExample">
-                    @await Html.PartialAsync("ChangeName", new ChangeNameViewModel {Name = Model.Name})
+                    @await Html.PartialAsync("ChangeName", new ChangeNameViewModel { Name = Model.Name })
                 </div>
                 <div class="collapse multi-collapse" id="multiCollapseExample3">
-                    @await Html.PartialAsync("ChangeTarget", new ChangeTargetViewModel {Target = Model.Target?.TargetName!, Type = Model.Target?.Type ?? ParticipantsType.Followers})
+                    @await Html.PartialAsync("ChangeTarget", new ChangeTargetViewModel { Target = Model.Target?.TargetName!, Type = Model.Target?.Type ?? ParticipantsType.Followers })
                 </div>
             </div>
         </div>

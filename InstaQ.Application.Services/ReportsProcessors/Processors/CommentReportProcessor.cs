@@ -27,13 +27,14 @@ public class CommentReportProcessor : IReportProcessorUnit<CommentReport>
             var publication = report.Publications.ElementAt(i);
             try
             {
-                var result = await _publicationInfoService.GetAsync(publication.ItemId, 500, token);
-                report.SetComments(new CommentsDto(publication.ItemId, publication.Pk, result));
+                var result = await _publicationInfoService.GetAsync(publication.Pk, 500, token);
+                report.SetComments(new CommentsDto(publication.Pk, result.Comments));
+                report.AddRequests(result.CountRequests);
                 count = 0;
             }
             catch (InstagramRequestException ex)
             {
-                report.SetComments(new CommentsDto(publication.ItemId, publication.Pk));
+                report.SetComments(new CommentsDto(publication.Pk));
                 count++;
                 if (count > 5) throw new TooManyRequestErrorsException(ex.Message);
             }

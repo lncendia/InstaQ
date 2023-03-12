@@ -1,3 +1,4 @@
+using InstaQ.Application.Abstractions.InstagramRequests.DTOs;
 using InstaQ.Application.Abstractions.InstagramRequests.Exceptions;
 using InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
 using InstaQ.Infrastructure.InstagramRequests.Abstractions;
@@ -20,29 +21,34 @@ public class LikesService : ILikesService
         _errorHandler = errorHandler;
     }
 
-    private async Task GetLikesPageAsync(List<LikeModel> items, string id, int count, string? nextFrom,
-        CancellationToken token)
+    private async Task<int> LoadLikesAsync(List<LikeModel> items, string id, int count, CancellationToken token)
     {
-        if (items.Count >= count) return;
+        int countRequests = 0;
+        string? nextFrom = null;
+        do
+        {
+            var queryParams = new Dictionary<string, string?> { { "media_id", id }, { "end_cursor", nextFrom } };
+            var response = await _requestSender.SendAsync("gql/media/likers/chunk", queryParams, token);
+            var data = _handler.MapResponse(response);
+            items.AddRange(data.Item1);
+            nextFrom = nextFrom != data.Item2 ? data.Item2 : null;
+            countRequests++;
+        } while (!string.IsNullOrEmpty(nextFrom) && items.Count < count);
 
-        var queryParams = new Dictionary<string, string?> {{"media_id", id}, {"end_cursor", nextFrom}};
-        var response = await _requestSender.SendAsync("gql/media/likers/chunk", queryParams, token);
-        var data = _handler.MapResponse(response);
-        items.AddRange(data.Item1);
-        if (string.IsNullOrEmpty(data.Item2)) return;
-        await GetLikesPageAsync(items, id, count, data.Item2, token);
+        return countRequests;
     }
 
 
-    public async Task<List<string>> GetAsync(string id, int count, CancellationToken token)
+    public async Task<LikesResultDto> GetAsync(string id, int count, CancellationToken token)
     {
         if (count < 1) throw new ArgumentException("Count can't be less then zero.");
 
         var likes = new List<LikeModel>();
         try
         {
-            await GetLikesPageAsync(likes, id, count, null, token);
-            return likes.Select(item => item.Pk).ToList();
+            var countRequests = await LoadLikesAsync(likes, id, count, token);
+            if (!likes.Any()) throw new ContentNotFoundException();
+            return new LikesResultDto(likes.Select(item => item.Pk).ToList(), countRequests);
         }
         catch (RequestException ex)
         {

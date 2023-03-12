@@ -9,7 +9,6 @@ public class ParticipantReportMapper : IReportMapperUnit<ParticipantReportDto, P
     public ParticipantReportViewModel Map(ParticipantReportDto report)
     {
         return new ParticipantReportViewModel(report.Id, report.CreationDate, report.StartDate, report.EndDate,
-            report.IsStarted, report.IsCompleted, report.IsSucceeded, report.Message, report.ElementsCount,
-            report.Pk);
+            report.IsStarted, report.IsCompleted, report.IsSucceeded, report.Message, report.ElementsCount);
     }
 }

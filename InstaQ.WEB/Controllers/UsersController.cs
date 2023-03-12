@@ -41,12 +41,12 @@ public class UsersController : Controller
     [HttpGet]
     public async Task<IActionResult> Edit(Guid? userId)
     {
-        if (!userId.HasValue) return RedirectToAction("Index", new {message = "Неверный идентификатор"});
+        if (!userId.HasValue) return RedirectToAction("Index", new { message = "Неверный идентификатор" });
 
         try
         {
             var user = await _usersManager.GetAsync(userId.Value);
-            return View(new UserViewModel(user.Id, user.Username, user.Email, user.EndOfSubscribe));
+            return View(new UserViewModel(user.Id, user.Username, user.Email, user.Balance));
         }
         catch (Exception ex)
         {
@@ -55,7 +55,7 @@ public class UsersController : Controller
                 UserNotFoundException => "Пользователь не найден",
                 _ => "Произошла ошибка при получении пользователя"
             };
-            return RedirectToAction("Index", new {message = text});
+            return RedirectToAction("Index", new { message = text });
         }
     }
 
@@ -117,7 +117,7 @@ public class UsersController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> AddSubscribe(AddSubscribeViewModel model)
+    public async Task<IActionResult> ChangeBalance(ChangeBalanceViewModel model)
     {
         if (!ModelState.IsValid)
         {
@@ -133,7 +133,7 @@ public class UsersController : Controller
 
         try
         {
-            await _usersManager.AddSubscribeAsync(model.Id, TimeSpan.FromDays(model.CountDays));
+            await _usersManager.ChangeBalanceAsync(model.Id, model.Balance);
             return Ok();
         }
         catch (Exception ex)
@@ -149,12 +149,12 @@ public class UsersController : Controller
 
     public async Task<IActionResult> AuthenticateAsUser(Guid? id)
     {
-        if (!id.HasValue) return RedirectToAction("Index", "Home", new {message = "Пользователь не найден"});
+        if (!id.HasValue) return RedirectToAction("Index", "Home", new { message = "Пользователь не найден" });
         try
         {
             var user = await _usersManager.GetAuthenticationDataAsync(id.Value);
             await _signInManager.SignInAsync(user, true);
-            return RedirectToAction("Index", "Home", new {message = $"Вы аутентифицированы как {user.UserName}"});
+            return RedirectToAction("Index", "Home", new { message = $"Вы аутентифицированы как {user.UserName}" });
         }
         catch (Exception ex)
         {
