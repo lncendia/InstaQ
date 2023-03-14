@@ -51,7 +51,7 @@ public class PublicationsService : IPublicationsService
         var publications = new List<PublicationModel>();
         try
         {
-            var countRequests = await GetPublicationsPageAsync(publications, hashtag, count, token);
+            var countRequests = await GetPublicationsPageAsync(publications, hashtag.ToLower(), count, token);
             var list = publications.DistinctBy(x => x.Pk)
                 .Select(item => new PublicationDto(item.Pk, item.User.Pk, item.Code, item.LikeCount, item.CommentCount, item.CommentsDisabled)).ToList();
             return new PublicationsResultDto(list, countRequests);
