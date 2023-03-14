@@ -56,6 +56,7 @@ internal class CommentReportMapper : IAggregateMapperUnit<CommentReport, Comment
 
     private static List<CommentInfo> GetCommentsInfo(string rawString)
     {
+        if (string.IsNullOrEmpty(rawString)) return new List<CommentInfo>();
         var data = rawString.Split(';');
         var list = new List<CommentInfo>();
         foreach (var value in data)

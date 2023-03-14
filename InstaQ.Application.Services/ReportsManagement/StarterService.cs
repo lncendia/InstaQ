@@ -1,5 +1,4 @@
 ﻿using InstaQ.Application.Abstractions.InstagramRequests.Exceptions;
-using Microsoft.Extensions.Logging;
 using InstaQ.Application.Abstractions.ReportsManagement.ServicesInterfaces;
 using InstaQ.Application.Abstractions.ReportsProcessors.Exceptions;
 using InstaQ.Application.Abstractions.ReportsProcessors.ServicesInterfaces;
@@ -16,15 +15,13 @@ public class StarterService : IReportStarter
     private readonly IUnitOfWork _unitOfWork;
     private readonly IReportProcessorService _processorService;
     private readonly IReportInitializerService _initializerService;
-    private readonly ILogger<StarterService> _logger;
 
     public StarterService(IUnitOfWork unitOfWork, IReportInitializerService initializerService,
-        IReportProcessorService processorService, ILogger<StarterService> logger)
+        IReportProcessorService processorService)
     {
         _unitOfWork = unitOfWork;
         _initializerService = initializerService;
         _processorService = processorService;
-        _logger = logger;
     }
 
     public async Task StartLikeReportAsync(Guid id, CancellationToken token)
@@ -60,7 +57,6 @@ public class StarterService : IReportStarter
         }
         catch (Exception e)
         {
-            _logger.LogWarning(e, "The report ended with an error. Id {ReportId}", report.Id);
             report.Finish(HandleException(e));
         }
 

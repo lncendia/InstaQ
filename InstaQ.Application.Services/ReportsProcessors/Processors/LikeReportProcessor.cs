@@ -24,6 +24,7 @@ public class LikeReportProcessor : IReportProcessorUnit<LikeReport>
         int count = 0, i = report.Process;
         for (; i < report.Publications.Count; i++)
         {
+            if (i % 50 == 0) await SaveAsync(report);
             var publication = report.Publications.ElementAt(i);
             try
             {
@@ -38,8 +39,7 @@ public class LikeReportProcessor : IReportProcessorUnit<LikeReport>
                 report.SetLikes(new LikesDto(publication.Pk));
                 if (count > 5) throw new TooManyRequestErrorsException(exception.Message);
             }
-
-            if (i % 60 == 0) await SaveAsync(report);
+            
             await Task.Delay(1000, token);
         }
 

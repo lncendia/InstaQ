@@ -16,6 +16,9 @@ internal static class Initializer
     private static readonly FieldInfo ReportUserId =
         ReportType.GetField("<UserId>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
+    private static readonly FieldInfo ReportCountPublicationsToGet =
+        PublicationReportType.GetField("<CountPublicationsToGet>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
+
     private static readonly FieldInfo ReportCreationDate =
         ReportType.GetField("<CreationDate>k__BackingField", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
@@ -64,13 +67,14 @@ internal static class Initializer
         ReportHashtag.SetValue(report, model.Hashtag);
         ReportPublicationsList.SetValue(report, model.Publications.Select(GetPublication).ToList());
         ReportProcess.SetValue(report, model.Process);
+        ReportCountPublicationsToGet.SetValue(report, model.CountPublicationsToGet);
         InitReport(report, elements, model);
     }
 
     private static Publication GetPublication(PublicationModel model)
     {
-        object?[] args = { model.Pk, model.OwnerPk, model.Code, model.EntityId };
-        var publication = (Publication)PublicationType.Assembly.CreateInstance(
+        object?[] args = {model.Pk, model.OwnerPk, model.Code, model.EntityId};
+        var publication = (Publication) PublicationType.Assembly.CreateInstance(
             PublicationType.FullName!, false, BindingFlags.Instance | BindingFlags.NonPublic, null, args!,
             null, null)!;
         PublicationIsLoaded.SetValue(publication, model.IsLoaded);

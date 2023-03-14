@@ -10,19 +10,24 @@ namespace InstaQ.Domain.Reposts.PublicationReport.Entities;
 
 public abstract class PublicationReport : Report
 {
-    protected internal PublicationReport(User user, string hashtag, bool allParticipants, IReadOnlyCollection<Link>? coAuthors = null) : base(user)
+    protected internal PublicationReport(User user, string hashtag, bool allParticipants, int countPublicationsToGet,
+        IReadOnlyCollection<Link>? coAuthors = null) : base(user)
     {
         if (!hashtag.StartsWith('#')) hashtag = '#' + hashtag;
+        if (countPublicationsToGet is < 0 or > 500)
+            throw new ArgumentException("Count of publications can't be less then zero or bigger then 500",
+                nameof(countPublicationsToGet));
         Hashtag = hashtag;
         AllParticipants = allParticipants;
+        CountPublicationsToGet = countPublicationsToGet;
         if (coAuthors == null) return;
         if (coAuthors.Count > 3) throw new TooManyLinksException();
         foreach (var l in coAuthors)
         {
-            if (!l.IsConfirmed) throw new ArgumentException(null, nameof(coAuthors));
+            if (!l.IsConfirmed) throw new LinkNotActiveException(l.Id);
             if (l.User1Id == user.Id) _linkedUsersList.Add(l.User2Id);
             else if (l.User2Id == user.Id) _linkedUsersList.Add(l.User1Id);
-            else throw new ArgumentException(null, nameof(coAuthors));
+            else throw new LinkNotActiveException(l.Id);
         }
     }
 
@@ -31,6 +36,7 @@ public abstract class PublicationReport : Report
     public string Hashtag { get; }
     public int Process { get; protected set; }
     public bool AllParticipants { get; }
+    public int CountPublicationsToGet { get; }
 
     protected List<Publication> PublicationsList = new();
     public IReadOnlyCollection<Publication> Publications => PublicationsList.AsReadOnly();
@@ -49,7 +55,7 @@ public abstract class PublicationReport : Report
     private void LoadElements(IEnumerable<PublicationReportElement> elements)
     {
         ReportElementsList.AddRange(elements);
-        if(!ReportElementsList.Any()) throw new ElementsListEmptyException();
+        if (!ReportElementsList.Any()) throw new ElementsListEmptyException();
     }
 
     protected void Start(IEnumerable<PublicationDto> publications, IEnumerable<PublicationReportElement> elements)

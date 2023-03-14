@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InstaQ.Infrastructure.ApplicationDataStorage.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230309213438_Initial")]
+    [Migration("20230314113009_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

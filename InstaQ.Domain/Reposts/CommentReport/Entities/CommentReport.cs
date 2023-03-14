@@ -14,9 +14,11 @@ namespace InstaQ.Domain.Reposts.CommentReport.Entities;
 
 public class CommentReport : PublicationReport.Entities.PublicationReport
 {
-    public CommentReport(User user, string hashtag, bool allParticipants, IReadOnlyCollection<Link>? coAuthors = null) : base(user, hashtag, allParticipants, coAuthors)
+    public CommentReport(User user, string hashtag, bool allParticipants, int countPublicationsToGet,
+        IReadOnlyCollection<Link>? coAuthors = null) : base(user, hashtag, allParticipants, countPublicationsToGet,
+        coAuthors)
     {
-        AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] { UserId }), Id, ReportType.Comments,
+        AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] {UserId}), Id, ReportType.Comments,
             CreationDate, Hashtag));
     }
 

@@ -11,7 +11,6 @@ using InstaQ.Domain.ReportLogs.Enums;
 using InstaQ.Domain.Reposts.BaseReport.Exceptions;
 using InstaQ.Domain.Reposts.ParticipantReport.Exceptions;
 using InstaQ.Domain.Reposts.PublicationReport.Exceptions;
-using InstaQ.Domain.Users.Exceptions;
 
 namespace InstaQ.WEB.Controllers;
 
@@ -73,8 +72,8 @@ public class ReportsManagerController : Controller
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             await _reportCreationService.CreateLikeReportAsync(
-                new PublicationReportCreateDto(userId, model.Hashtag, model.AllParticipants, model.CoAuthors),
-                model.Timer);
+                new PublicationReportCreateDto(userId, model.Hashtag, model.AllParticipants,
+                    model.CountPublicationsToGet, model.CoAuthors), model.Timer);
             return Ok();
         }
         catch (Exception e)
@@ -83,7 +82,8 @@ public class ReportsManagerController : Controller
             {
                 UserBalanceException => "Пополните баланс",
                 TooManyLinksException => "Кол-во связей не должно быть больше 3",
-                ArgumentException => "Связь не активирована",
+                LinkNotActiveException => "Связь не активирована",
+                ArgumentException => "Некорректное число публикаций",
                 _ => "Произошла ошибка"
             };
             return BadRequest(message);
@@ -104,8 +104,8 @@ public class ReportsManagerController : Controller
         {
             var userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
             await _reportCreationService.CreateCommentReportAsync(
-                new PublicationReportCreateDto(userId, model.Hashtag, model.AllParticipants, model.CoAuthors),
-                model.Timer);
+                new PublicationReportCreateDto(userId, model.Hashtag, model.AllParticipants,
+                    model.CountPublicationsToGet, model.CoAuthors), model.Timer);
             return Ok();
         }
         catch (Exception e)
@@ -114,7 +114,8 @@ public class ReportsManagerController : Controller
             {
                 UserBalanceException => "Пополните баланс",
                 TooManyLinksException => "Кол-во связей не должно быть больше 3",
-                ArgumentException => "Связь не активирована",
+                LinkNotActiveException => "Связь не активирована",
+                ArgumentException => "Некорректное число публикаций",
                 _ => "Произошла ошибка"
             };
             return BadRequest(message);

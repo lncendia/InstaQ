@@ -21,6 +21,7 @@ public abstract class Report : AggregateRoot
     public int RequestsCount { get; private set; }
     public bool IsSucceeded { get; private set; }
     public string? Message { get; private set; }
+
     public bool IsStarted => StartDate.HasValue;
     public bool IsCompleted => EndDate.HasValue;
 

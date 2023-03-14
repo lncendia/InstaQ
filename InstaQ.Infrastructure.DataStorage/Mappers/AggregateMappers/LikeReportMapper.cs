@@ -52,6 +52,7 @@ internal class LikeReportMapper : IAggregateMapperUnit<LikeReport, LikeReportMod
 
     private static List<LikeInfo> GetLikesInfo(string rawString)
     {
+        if (string.IsNullOrEmpty(rawString)) return new List<LikeInfo>();
         var data = rawString.Split(';');
         var list = new List<LikeInfo>();
         foreach (var value in data)

@@ -14,10 +14,11 @@ namespace InstaQ.Domain.Reposts.LikeReport.Entities;
 
 public class LikeReport : PublicationReport.Entities.PublicationReport
 {
-    public LikeReport(User user, string hashtag, bool allParticipants, IReadOnlyCollection<Link>? coAuthors = null) :
-        base(user, hashtag, allParticipants, coAuthors)
+    public LikeReport(User user, string hashtag, bool allParticipants, int countPublicationsToGet,
+        IReadOnlyCollection<Link>? coAuthors = null) : base(user, hashtag, allParticipants, countPublicationsToGet,
+        coAuthors)
     {
-        AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] { UserId }), Id, ReportType.Likes, CreationDate,
+        AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] {UserId}), Id, ReportType.Likes, CreationDate,
             Hashtag));
     }
 

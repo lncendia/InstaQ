@@ -22,6 +22,7 @@ public class CommentReportProcessor : IReportProcessorUnit<CommentReport>
     public async Task ProcessReportAsync(CommentReport report, CancellationToken token)
     {
         int count = 0, i = report.Process;
+        if (i % 50 == 0) await SaveAsync(report);
         for (; i < report.Publications.Count; i++)
         {
             var publication = report.Publications.ElementAt(i);
@@ -38,8 +39,7 @@ public class CommentReportProcessor : IReportProcessorUnit<CommentReport>
                 count++;
                 if (count > 5) throw new TooManyRequestErrorsException(ex.Message);
             }
-
-            if (i % 60 == 0) await SaveAsync(report);
+            
             await Task.Delay(1000, token);
         }
 

@@ -25,7 +25,8 @@ public class CommentReportInitializer : IReportInitializerUnit<CommentReport>
         var t1 = _publicationGetterService.GetAsync(report.Hashtag, 500, token);
         var t2 = Initializer.GetParticipantsAsync(report, _unitOfWork);
         await Task.WhenAll(t1, t2);
-        var publications = t1.Result.Publications.OrderByDescending(x => x.LikesCount).Take(100)
+        var publications = t1.Result.Publications.Where(x => !x.CommentsDisabled)
+            .OrderByDescending(x => x.CommentsCount).Take(report.CountPublicationsToGet)
             .Select(x => new PublicationDto(x.Pk, x.OwnerPk, x.Code));
         report.Start(t2.Result, publications);
         report.AddRequests(t1.Result.CountRequests);

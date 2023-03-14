@@ -9,4 +9,5 @@ public abstract class PublicationReportModel : ReportModel
     public List<PublicationModel> Publications { get; set; } = new();
     public int Process { get; set; }
     public bool AllParticipants { get; set; }
+    public int CountPublicationsToGet { get; set; }
 }
