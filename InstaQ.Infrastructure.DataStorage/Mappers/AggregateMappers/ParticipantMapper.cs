@@ -12,6 +12,7 @@ internal class ParticipantMapper : IAggregateMapperUnit<Participant, Participant
         typeof(Participant).GetField("<ParentParticipantId>k__BackingField",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
 
+    // ReSharper disable once CollectionNeverUpdated.Local
     private static readonly List<Participant> MockList = new();
 
     public Participant Map(ParticipantModel model)

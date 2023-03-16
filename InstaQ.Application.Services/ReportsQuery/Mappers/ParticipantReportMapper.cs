@@ -16,7 +16,6 @@ public class ParticipantReportMapper : IReportMapperUnit<ParticipantReportDto, P
         builder.WithDates(report.StartDate!.Value, report.EndDate)
             .WithStatus(report.IsCompleted, report.IsSucceeded);
         if (!string.IsNullOrEmpty(report.Message)) builder.WithMessage(report.Message);
-        var elements = report.Participants;
-        return builder.Build();
+       return builder.Build();
     }
 }

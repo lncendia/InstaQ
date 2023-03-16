@@ -3,7 +3,6 @@ using InstaQ.Domain.Reposts.CommentReport.ValueObjects;
 using InstaQ.Infrastructure.DataStorage.Context;
 using InstaQ.Infrastructure.DataStorage.Mappers.Abstractions;
 using InstaQ.Infrastructure.DataStorage.Mappers.StaticMethods;
-using InstaQ.Infrastructure.DataStorage.Models.Reports.Base;
 using InstaQ.Infrastructure.DataStorage.Models.Reports.CommentReport;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,7 +36,7 @@ internal class CommentReportModelMapper : IModelMapperUnit<CommentReportModel, C
         else
         {
             var modelElements = model.Elements.OrderBy(x => x.Id).ToList();
-            var reportElements = commentReport.ElementsList.OrderBy(x => ((ElementModel) x).Id).ToList();
+            var reportElements = commentReport.ElementsList.OrderBy(x => x.Id).ToList();
             for (var i = 0; i < modelElements.Count; i++) Map(modelElements[i], reportElements[i]);
         }
 

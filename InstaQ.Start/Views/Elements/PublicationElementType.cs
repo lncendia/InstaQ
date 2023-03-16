@@ -1,4 +1,4 @@
-﻿namespace InstaQ.Start.Views.ReportElements;
+﻿namespace InstaQ.Start.Views.Elements;
 
 public enum PublicationElementType
 {

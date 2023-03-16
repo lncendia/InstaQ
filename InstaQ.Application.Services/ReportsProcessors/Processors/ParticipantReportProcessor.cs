@@ -1,5 +1,4 @@
-﻿using InstaQ.Application.Abstractions.InstagramRequests.Exceptions;
-using InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
+﻿using InstaQ.Application.Abstractions.InstagramRequests.ServicesInterfaces;
 using InstaQ.Application.Abstractions.ReportsProcessors.ServicesInterfaces;
 using InstaQ.Domain.Reposts.BaseReport.Exceptions;
 using InstaQ.Domain.Reposts.ParticipantReport.Entities;
