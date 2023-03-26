@@ -27,7 +27,6 @@ public class LikeReportInitializer : IReportInitializerUnit<LikeReport>
         await Task.WhenAll(t1, t2);
         var publications = t1.Result.Publications.OrderByDescending(x => x.LikesCount)
             .Take(report.CountPublicationsToGet).Select(x => new PublicationDto(x.Pk, x.OwnerPk, x.Code));
-        report.Start(t2.Result, publications);
-        report.AddRequests(t1.Result.CountRequests);
+        report.Start(t2.Result, publications, t1.Result.CountRequests);
     }
 }

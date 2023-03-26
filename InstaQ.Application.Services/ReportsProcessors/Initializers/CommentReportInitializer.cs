@@ -28,7 +28,6 @@ public class CommentReportInitializer : IReportInitializerUnit<CommentReport>
         var publications = t1.Result.Publications.Where(x => !x.CommentsDisabled)
             .OrderByDescending(x => x.CommentsCount).Take(report.CountPublicationsToGet)
             .Select(x => new PublicationDto(x.Pk, x.OwnerPk, x.Code));
-        report.Start(t2.Result, publications);
-        report.AddRequests(t1.Result.CountRequests);
+        report.Start(t2.Result, publications, t1.Result.CountRequests);
     }
 }

@@ -12,20 +12,23 @@ public class PublicationsService : IPublicationsService
     private readonly IRequestSender _requestSender;
     private readonly IResponseHandler<(List<PublicationModel>, string?)> _handler;
     private readonly IResponseHandler<ErrorModel> _errorHandler;
+    private readonly IResponseHandler<HashtagModel> _hashtagHandler;
 
     public PublicationsService(IRequestSender requestSender,
-        IResponseHandler<(List<PublicationModel>, string?)> handler, IResponseHandler<ErrorModel> errorHandler)
+        IResponseHandler<(List<PublicationModel>, string?)> handler, IResponseHandler<HashtagModel> hashtagHandler,
+        IResponseHandler<ErrorModel> errorHandler)
     {
         _requestSender = requestSender;
         _handler = handler;
         _errorHandler = errorHandler;
+        _hashtagHandler = hashtagHandler;
     }
 
-    private async Task<int> GetPublicationsPageAsync(List<PublicationModel> items, string query, int count,
-        CancellationToken token)
+    private async Task<(List<PublicationModel>, int)> GetPublicationsPageAsync(string query, int count,
+        string? nextFrom, CancellationToken token)
     {
-        int countRequests = 0;
-        string? nextFrom = null;
+        var countRequests = 0;
+        var items = new List<PublicationModel>();
         do
         {
             var countRequest = count - items.Count;
@@ -40,21 +43,40 @@ public class PublicationsService : IPublicationsService
             countRequests++;
         } while (!string.IsNullOrEmpty(nextFrom) && items.Count < count);
 
-        return countRequests;
+        return (items, countRequests);
+    }
+
+    private async Task<HashtagModel> GetHashtagAsync(string name, CancellationToken token)
+    {
+        var queryParams = new Dictionary<string, string?> { { "name", name } };
+        var response = await _requestSender.SendAsync("/a1/hashtag", queryParams, token);
+        return _hashtagHandler.MapResponse(response);
     }
 
 
     public async Task<PublicationsResultDto> GetAsync(string hashtag, int count, CancellationToken token)
     {
         if (count < 1) throw new ArgumentException("Count can't be less then zero.");
-
-        var publications = new List<PublicationModel>();
+        if (hashtag.StartsWith('#')) hashtag = hashtag[1..];
+        hashtag = hashtag.ToLower();
+        var countRequests = 0;
+        var publications = new List<PublicationDto>();
         try
         {
-            var countRequests = await GetPublicationsPageAsync(publications, hashtag.ToLower(), count, token);
-            var list = publications.DistinctBy(x => x.Pk)
-                .Select(item => new PublicationDto(item.Pk, item.User.Pk, item.Code, item.LikeCount, item.CommentCount, item.CommentsDisabled)).ToList();
-            return new PublicationsResultDto(list, countRequests);
+            var tag = await GetHashtagAsync(hashtag, token);
+            var firstPublications = tag.Recent.Sections.SelectMany(x => x.Content.Medias).ToList();
+            publications.AddRange(firstPublications.Select(item => new PublicationDto(item.Pk, item.User.Pk, item.Code,
+                item.LikeCount, item.CommentCount, false)));
+            countRequests++;
+            if (publications.Count < count && tag.Recent.MoreAvailable)
+            {
+                var allPublications =
+                    await GetPublicationsPageAsync(hashtag, count, tag.Recent.NextMaxId, token);
+                countRequests += allPublications.Item2;
+                publications.AddRange(allPublications.Item1.DistinctBy(x => x.Pk)
+                    .Select(item => new PublicationDto(item.Pk, item.User.Pk, item.Code, item.LikeCount,
+                        item.CommentCount, item.CommentsDisabled)));
+            }
         }
         catch (RequestException ex)
         {
@@ -65,5 +87,7 @@ public class PublicationsService : IPublicationsService
 
             throw new InstagramRequestException(ex.ResponseCode, message, ex);
         }
+
+        return new PublicationsResultDto(publications, countRequests);
     }
 }

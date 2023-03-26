@@ -21,10 +21,10 @@ public class ParticipantsService : IParticipantsService
         _errorHandler = errorHandler;
     }
 
-    private async Task<int> GetFollowersPageAsync(List<ParticipantModel> items, string pk, int count,
-        CancellationToken token)
+    private async Task<(List<ParticipantModel>, int)> GetFollowersPageAsync(string pk, int count, CancellationToken token)
     {
         int countRequests = 0;
+        var items = new List<ParticipantModel>();
         string? nextFrom = null;
         do
         {
@@ -40,7 +40,7 @@ public class ParticipantsService : IParticipantsService
             countRequests++;
         } while (!string.IsNullOrEmpty(nextFrom) && items.Count < count);
 
-        return countRequests;
+        return (items, countRequests);
     }
 
     private async Task<int> GetFollowingsPageAsync(List<ParticipantModel> items, string pk, int count,
@@ -69,13 +69,12 @@ public class ParticipantsService : IParticipantsService
     public async Task<ParticipantsResultDto> GetFollowersAsync(string id, int count, CancellationToken token)
     {
         if (count < 1) throw new ArgumentException("Count can't be less then zero.");
-
-        var participants = new List<ParticipantModel>();
+        
         try
         {
-            var countRequests = await GetFollowersPageAsync(participants, id, count, token);
-            var list = participants.Select(item => new ParticipantDto(item.Pk, item.Username)).ToList();
-            return new ParticipantsResultDto(list, countRequests);
+            var participants = await GetFollowersPageAsync(id, count, token);
+            var list = participants.Item1.Select(item => new ParticipantDto(item.Pk, item.Username)).ToList();
+            return new ParticipantsResultDto(list, participants.Item2);
         }
         catch (RequestException ex)
         {

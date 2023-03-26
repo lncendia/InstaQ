@@ -24,6 +24,7 @@ internal static class InstagramServices
         services.AddScoped<IResponseHandler<(List<ParticipantModel>, string?)>, ParticipantsHandler>();
         services.AddScoped<IResponseHandler<(List<PublicationModel>, string?)>, PublicationsHandler>();
         services.AddScoped<IResponseHandler<UserModel>, UserHandler>();
+        services.AddScoped<IResponseHandler<HashtagModel>, HashtagHandler>();
         services.AddScoped<IResponseHandler<ErrorModel>, ErrorHandler>();
     }
 }

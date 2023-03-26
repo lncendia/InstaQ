@@ -27,7 +27,7 @@ public class LikeReport : PublicationReport.Entities.PublicationReport
     ///<exception cref="ReportAlreadyStartedException">Report already started</exception>
     ///<exception cref="ReportAlreadyCompletedException">Report already completed</exception>
     /// <exception cref="ParticipantNotLinkedToReportException"></exception>
-    public void Start(IEnumerable<ChatParticipants> participants, IEnumerable<PublicationDto> publications)
+    public void Start(IEnumerable<ChatParticipants> participants, IEnumerable<PublicationDto> publications, int countRequests)
     {
         if (IsCompleted) throw new ReportAlreadyCompletedException(Id);
         if (IsStarted) throw new ReportAlreadyStartedException(Id);
@@ -39,7 +39,7 @@ public class LikeReport : PublicationReport.Entities.PublicationReport
                 elements);
         }
 
-        base.Start(publications, elements);
+        base.Start(publications, elements, countRequests);
     }
 
     private void ProcessLikeChat(IList<Participant> participants, string likeChatName, List<LikeReportElement> elements)
@@ -78,7 +78,7 @@ public class LikeReport : PublicationReport.Entities.PublicationReport
         foreach (var node in nodes)
         {
             var isConfirmed = likes.SuccessLoaded &&
-                              (publication.Pk == node.Pk || likes.Likes!.Any(x => x == node.Pk));
+                              (publication.OwnerPk == node.Pk || likes.Likes!.Any(x => x == node.Pk));
             var info = new LikeInfo(publication.Id, isConfirmed);
             node.AddLike(info);
         }

@@ -18,7 +18,7 @@ public class CommentReport : PublicationReport.Entities.PublicationReport
         IReadOnlyCollection<Link>? coAuthors = null) : base(user, hashtag, allParticipants, countPublicationsToGet,
         coAuthors)
     {
-        AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] {UserId}), Id, ReportType.Comments,
+        AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] { UserId }), Id, ReportType.Comments,
             CreationDate, Hashtag));
     }
 
@@ -28,7 +28,8 @@ public class CommentReport : PublicationReport.Entities.PublicationReport
     ///<exception cref="ReportAlreadyStartedException">Report already started</exception>
     ///<exception cref="ReportAlreadyCompletedException">Report already completed</exception>
     /// <exception cref="ParticipantNotLinkedToReportException"></exception>
-    public void Start(IEnumerable<ChatParticipants> participants, IEnumerable<PublicationDto> publications)
+    public void Start(IEnumerable<ChatParticipants> participants, IEnumerable<PublicationDto> publications,
+        int countRequests)
     {
         if (IsCompleted) throw new ReportAlreadyCompletedException(Id);
         if (IsStarted) throw new ReportAlreadyStartedException(Id);
@@ -40,7 +41,7 @@ public class CommentReport : PublicationReport.Entities.PublicationReport
                 participantsDto.LikeChatName, elements);
         }
 
-        base.Start(publications, elements);
+        base.Start(publications, elements, countRequests);
     }
 
     private void ProcessCommentChat(IList<Participant> participants, string likeChatName,
@@ -77,22 +78,27 @@ public class CommentReport : PublicationReport.Entities.PublicationReport
         if (publication == null) throw new PublicationNotFoundException();
         publication.IsLoaded = comments.SuccessLoaded;
         var nodes = ReportElementsList.Cast<CommentReportElement>();
-        foreach (var node in nodes)
+
+        if (comments.SuccessLoaded)
         {
-            CommentInfo? info;
-            if (comments.SuccessLoaded)
+            foreach (var node in nodes)
             {
+                CommentInfo? info;
                 var comment = comments.Comments!.FirstOrDefault(x => x.Item1 == node.Pk);
                 if (comment != default) info = new CommentInfo(publication.Id, true, comment.Item2);
-                else if (publication.Pk == node.Pk) info = new CommentInfo(publication.Id, true, null);
+                else if (publication.OwnerPk == node.Pk) info = new CommentInfo(publication.Id, true, null);
                 else info = new CommentInfo(publication.Id, false, null);
-            }
-            else
-            {
-                info = new CommentInfo(publication.Id, false, null);
-            }
 
-            node.AddComment(info);
+                node.AddComment(info);
+            }
+        }
+        else
+        {
+            foreach (var node in nodes)
+            {
+                var info = new CommentInfo(publication.Id, false, null);
+                node.AddComment(info);
+            }
         }
 
         Process++;

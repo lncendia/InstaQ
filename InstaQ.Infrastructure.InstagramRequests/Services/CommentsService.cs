@@ -21,9 +21,10 @@ public class CommentsService : ICommentsService
         _errorHandler = errorHandler;
     }
 
-    private async Task<int> LoadCommentsAsync(List<CommentModel> items, string id, int count, CancellationToken token)
+    private async Task<(List<CommentModel>, int)> LoadCommentsAsync(string id, int count, CancellationToken token)
     {
-        int countRequests = 0;
+        var countRequests = 0;
+        var items = new List<CommentModel>();
         string? nextFrom = null;
         do
         {
@@ -35,18 +36,18 @@ public class CommentsService : ICommentsService
             countRequests++;
         } while (!string.IsNullOrEmpty(nextFrom) && items.Count < count);
 
-        return countRequests;
+        return (items, countRequests);
     }
 
     public async Task<CommentsResultDto> GetAsync(string id, int count, CancellationToken token)
     {
         if (count < 1) throw new ArgumentException("Count can't be less then zero.");
 
-        var comments = new List<CommentModel>();
         try
         {
-            var countRequests = await LoadCommentsAsync(comments, id, count, token);
-            return new CommentsResultDto(comments.Select(item => (item.Owner.Pk, item.Text)).ToList(), countRequests);
+            var comments = await LoadCommentsAsync(id, count, token);
+            return new CommentsResultDto(comments.Item1.Select(item => (item.Owner.Pk, item.Text)).ToList(),
+                comments.Item2);
         }
         catch (RequestException ex)
         {

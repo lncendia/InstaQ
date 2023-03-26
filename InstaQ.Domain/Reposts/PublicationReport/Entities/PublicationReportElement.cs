@@ -20,5 +20,5 @@ public abstract class PublicationReportElement : ReportElement
     public bool IsAccepted { get; private set; }
     public bool Vip { get; }
     public string? Note { get; }
-    protected readonly PublicationReportElement? Parent;
+    internal PublicationReportElement? Parent { get; }
 }

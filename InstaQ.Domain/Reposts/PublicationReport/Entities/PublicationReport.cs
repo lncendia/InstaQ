@@ -58,11 +58,19 @@ public abstract class PublicationReport : Report
         if (!ReportElementsList.Any()) throw new ElementsListEmptyException();
     }
 
-    protected void Start(IEnumerable<PublicationDto> publications, IEnumerable<PublicationReportElement> elements)
+    protected void Start(IEnumerable<PublicationDto> publications, IEnumerable<PublicationReportElement> elements,
+        int countRequests)
     {
-        if (!AllParticipants) elements = elements.Where(x => publications.Any(p => p.Pk == x.Pk));
+        base.Start();
+        AddRequests(countRequests);
+        if (!AllParticipants)
+        {
+            var newElements = elements.Where(x => publications.Any(p => p.OwnerPk == x.Pk)).ToList();
+            newElements.AddRange(newElements.Where(x => x.Parent != null).Select(x => x.Parent)!);
+            elements = newElements.DistinctBy(x => x.Id);
+        }
+
         LoadPublications(publications);
         LoadElements(elements);
-        base.Start();
     }
 }

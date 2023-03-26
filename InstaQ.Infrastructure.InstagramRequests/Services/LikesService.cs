@@ -21,9 +21,10 @@ public class LikesService : ILikesService
         _errorHandler = errorHandler;
     }
 
-    private async Task<int> LoadLikesAsync(List<LikeModel> items, string id, int count, CancellationToken token)
+    private async Task<(List<LikeModel>, int)> LoadLikesAsync(string id, int count, CancellationToken token)
     {
-        int countRequests = 0;
+        var countRequests = 0;
+        var items = new List<LikeModel>();
         string? nextFrom = null;
         do
         {
@@ -35,7 +36,7 @@ public class LikesService : ILikesService
             countRequests++;
         } while (!string.IsNullOrEmpty(nextFrom) && items.Count < count);
 
-        return countRequests;
+        return (items, countRequests);
     }
 
 
@@ -43,12 +44,10 @@ public class LikesService : ILikesService
     {
         if (count < 1) throw new ArgumentException("Count can't be less then zero.");
 
-        var likes = new List<LikeModel>();
         try
         {
-            var countRequests = await LoadLikesAsync(likes, id, count, token);
-            if (!likes.Any()) throw new ContentNotFoundException();
-            return new LikesResultDto(likes.Select(item => item.Pk).ToList(), countRequests);
+            var likes = await LoadLikesAsync(id, count, token);
+            return new LikesResultDto(likes.Item1.Select(x => x.Pk).ToList(), likes.Item2);
         }
         catch (RequestException ex)
         {
