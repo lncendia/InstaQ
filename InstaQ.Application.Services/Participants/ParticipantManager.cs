@@ -77,7 +77,15 @@ public class ParticipantManager : IParticipantManager
 
     public async Task EditAsync(Guid userId, Guid participantId, Guid? parentId, string? note, bool vip)
     {
-        var participant = await _unitOfWork.ParticipantRepository.Value.GetAsync(participantId);
+        Participant? participant;
+        if (!_cache.TryGetValue(CachingConstants.GetParticipantsKey(userId), out List<Participant>? allParticipants))
+        {
+            participant = await _unitOfWork.ParticipantRepository.Value.GetAsync(participantId);
+        }
+        else
+        {
+            participant = allParticipants!.First(x => x.Id == participantId);
+        }
         if (participant == null) throw new ParticipantNotFoundException();
         if (participant.UserId != userId) throw new ParticipantNotFoundException();
 
@@ -99,8 +107,7 @@ public class ParticipantManager : IParticipantManager
         {
             participant.DeleteParent();
         }
-
-        _cache.Remove(CachingConstants.GetParticipantsKey(userId));
+        
         await _unitOfWork.ParticipantRepository.Value.UpdateAsync(participant);
         await _unitOfWork.SaveChangesAsync();
     }
@@ -111,6 +118,7 @@ public class ParticipantManager : IParticipantManager
         var participant = await _unitOfWork.ParticipantRepository.Value.GetAsync(participantId);
         if (participant == null) throw new ParticipantNotFoundException();
         if (participant.UserId != userId) throw new ParticipantNotFoundException();
+        _cache.Remove(CachingConstants.GetParticipantsKey(userId));
         await _unitOfWork.ParticipantRepository.Value.DeleteAsync(participantId);
         await _unitOfWork.SaveChangesAsync();
     }

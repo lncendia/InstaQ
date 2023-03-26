@@ -32,7 +32,7 @@ public class UserParticipantsService : IUserParticipantsService
         }
         else
         {
-            participants!.RemoveAll(x => x.ParentParticipantId.HasValue);
+            participants = participants!.Where(x => !x.ParentParticipantId.HasValue).ToList();
         }
 
         return participants.Select(x => (x.Id, x.Name)).ToList();

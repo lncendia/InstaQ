@@ -38,7 +38,6 @@ public class ParticipantReportFinishedDomainEventHandler : INotificationHandler<
                 var newParticipant = new Participant(notification.UserId, participant.Name, participant.Pk, participants);
                 participants.Add(newParticipant);
                 await _unitOfWork.ParticipantRepository.Value.AddAsync(newParticipant);
-
                 continue;
             }
 
@@ -56,7 +55,5 @@ public class ParticipantReportFinishedDomainEventHandler : INotificationHandler<
                     break;
             }
         }
-
-        _cache.Remove(CachingConstants.GetParticipantsKey(notification.UserId));
     }
 }
