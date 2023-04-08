@@ -10,6 +10,6 @@ public class PublicationsHandler : IResponseHandler<(List<PublicationModel> mode
     public (List<PublicationModel> model, string? next) MapResponse(string data)
     {
         return JsonConvert.DeserializeObject<(List<PublicationModel> model, string? next)>(data,
-            new LamadavaResponseConverter<PublicationModel>())!;
+            new LamadavaResponseConverter<PublicationModel>());
     }
 }

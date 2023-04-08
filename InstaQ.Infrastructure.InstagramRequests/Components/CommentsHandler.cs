@@ -10,6 +10,6 @@ public class CommentsHandler : IResponseHandler<(List<CommentModel> model, strin
     public (List<CommentModel> model, string? next) MapResponse(string data)
     {
         return JsonConvert.DeserializeObject<(List<CommentModel> model, string? next)>(data,
-            new LamadavaResponseConverter<CommentModel>())!;
+            new LamadavaResponseConverter<CommentModel>());
     }
 }

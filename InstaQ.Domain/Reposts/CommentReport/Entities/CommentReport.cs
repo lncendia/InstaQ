@@ -52,7 +52,7 @@ public class CommentReport : PublicationReport.Entities.PublicationReport
 
         var groupedElements = participants.GroupBy(x => x.ParentParticipantId).ToList();
         if (!groupedElements.Any()) return;
-        var id = 1;
+        var id = elements.Count + 1;
         foreach (var participant in groupedElements.First(x => x.Key == null))
         {
             var item = new CommentReportElement(participant.Name, likeChatName, participant.Pk, participant.Id,

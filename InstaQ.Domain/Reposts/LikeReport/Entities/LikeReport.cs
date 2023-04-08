@@ -18,7 +18,7 @@ public class LikeReport : PublicationReport.Entities.PublicationReport
         IReadOnlyCollection<Link>? coAuthors = null) : base(user, hashtag, allParticipants, countPublicationsToGet,
         coAuthors)
     {
-        AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] {UserId}), Id, ReportType.Likes, CreationDate,
+        AddDomainEvent(new ReportCreatedEvent(LinkedUsers.Concat(new[] { UserId }), Id, ReportType.Likes, CreationDate,
             Hashtag));
     }
 
@@ -27,7 +27,8 @@ public class LikeReport : PublicationReport.Entities.PublicationReport
     ///<exception cref="ReportAlreadyStartedException">Report already started</exception>
     ///<exception cref="ReportAlreadyCompletedException">Report already completed</exception>
     /// <exception cref="ParticipantNotLinkedToReportException"></exception>
-    public void Start(IEnumerable<ChatParticipants> participants, IEnumerable<PublicationDto> publications, int countRequests)
+    public void Start(IEnumerable<ChatParticipants> participants, IEnumerable<PublicationDto> publications,
+        int countRequests)
     {
         if (IsCompleted) throw new ReportAlreadyCompletedException(Id);
         if (IsStarted) throw new ReportAlreadyStartedException(Id);
@@ -49,7 +50,7 @@ public class LikeReport : PublicationReport.Entities.PublicationReport
 
         var groupedElements = participants.GroupBy(x => x.ParentParticipantId).ToList();
         if (!groupedElements.Any()) return;
-        var id = 1;
+        var id = elements.Count + 1;
         foreach (var participant in groupedElements.First(x => x.Key == null))
         {
             var item = new LikeReportElement(participant.Name, likeChatName, participant.Pk, participant.Id,

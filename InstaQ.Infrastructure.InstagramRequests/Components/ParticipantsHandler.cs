@@ -10,6 +10,6 @@ public class ParticipantsHandler : IResponseHandler<(List<ParticipantModel> mode
     public (List<ParticipantModel> model, string? next) MapResponse(string data)
     {
         return JsonConvert.DeserializeObject<(List<ParticipantModel> model, string? next)>(data,
-            new LamadavaResponseConverter<ParticipantModel>())!;
+            new LamadavaResponseConverter<ParticipantModel>());
     }
 }

@@ -10,6 +10,6 @@ public class LikesHandler : IResponseHandler<(List<LikeModel> model, string? nex
     public (List<LikeModel> model, string? next) MapResponse(string data)
     {
         return JsonConvert.DeserializeObject<(List<LikeModel> model, string? next)>(data,
-            new LamadavaResponseConverter<LikeModel>())!;
+            new LamadavaResponseConverter<LikeModel>());
     }
 }
