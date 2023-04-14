@@ -4,11 +4,11 @@ namespace InstaQ.Application.Abstractions.Elements.DTOs.ParticipantElementDto;
 
 public class ParticipantElementDto : ElementDto.ElementDto
 {
-    public ParticipantElementDto(ParticipantElementBuilder builder) : base(builder)
+    public ParticipantElementDto(string name, string pk, string? newName, ElementType? type, IEnumerable<ParticipantElementDto> children) : base(name, pk)
     {
-        Type = builder.Type;
-        NewName = builder.NewName;
-        if (builder.Children != null) Children.AddRange(builder.Children);
+        NewName = newName;
+        Type = type;
+        Children.AddRange(children);
     }
 
     public string? NewName { get; }

@@ -2,10 +2,10 @@
 
 public class ElementDto
 {
-    protected ElementDto(ElementBuilder builder)
+    protected ElementDto(string name, string pk)
     {
-        Name = builder.Name ?? throw new ArgumentException("builder not formed", nameof(builder));
-        Pk = builder.Pk ?? throw new ArgumentException("builder not formed", nameof(builder));
+        Name = name;
+        Pk = pk;
     }
     
     public string Name { get; }

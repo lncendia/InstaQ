@@ -28,5 +28,11 @@ public class ParticipantElementBuilder : ElementBuilder
         return this;
     }
 
-    public ParticipantElementDto Build() => new(this);
+    public ParticipantElementDto Build()
+    {
+        if (string.IsNullOrEmpty(Name)) throw new InvalidOperationException("builder not formed");
+        if (string.IsNullOrEmpty(Pk)) throw new InvalidOperationException("builder not formed");
+        Children ??= Enumerable.Empty<ParticipantElementDto>();
+        return new ParticipantElementDto(Name, Pk, NewName, Type, Children);
+    }
 }

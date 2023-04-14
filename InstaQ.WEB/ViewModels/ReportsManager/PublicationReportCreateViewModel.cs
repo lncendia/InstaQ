@@ -11,7 +11,7 @@ public class PublicationReportCreateViewModel
 
     [Required(ErrorMessage = "Поле не должно быть пустым")]
     [Display(Name = "Загрузить всех участников")]
-    public bool AllParticipants { get; set; }
+    public bool AllParticipants { get; set; } = true;
 
 
     [Required(ErrorMessage = "Поле не должно быть пустым")]

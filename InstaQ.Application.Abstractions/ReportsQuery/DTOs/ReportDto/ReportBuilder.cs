@@ -11,6 +11,7 @@ public abstract class ReportBuilder
     public bool IsSucceeded { get; private set; }
     public string? Message { get; private set; }
     public int ElementsCount { get; private set; }
+    public int RequestsCount { get; private set; }
 
     public ReportBuilder WithId(Guid id)
     {
@@ -48,6 +49,11 @@ public abstract class ReportBuilder
     public ReportBuilder WithElements(int count)
     {
         ElementsCount = count;
+        return this;
+    }
+    public ReportBuilder WithRequests(int count)
+    {
+        RequestsCount = count;
         return this;
     }
 }

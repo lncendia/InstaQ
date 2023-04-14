@@ -4,7 +4,7 @@ namespace InstaQ.Application.Abstractions.ReportsQuery.DTOs.PublicationReportDto
 
 public abstract class PublicationReportBuilder : ReportBuilder
 {
-    public IEnumerable<string>? LinkedUsers { get; private set; }
+    public IEnumerable<string>? LinkedUsers { get; protected set; }
     public string? Hashtag { get; private set; }
     public int PublicationsCount { get; private set; }
     public int Process { get; private set; }

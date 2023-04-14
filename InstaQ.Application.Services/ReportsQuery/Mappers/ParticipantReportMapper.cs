@@ -13,9 +13,11 @@ public class ParticipantReportMapper : IReportMapperUnit<ParticipantReportDto, P
             .WithCreationDate(report.CreationDate)
             .WithElements(report.Participants.Count);
         if (!report.IsStarted) return builder.Build();
-        builder.WithDates(report.StartDate!.Value, report.EndDate)
+        builder
+            .WithDates(report.StartDate!.Value, report.EndDate)
+            .WithRequests(report.RequestsCount)
             .WithStatus(report.IsCompleted, report.IsSucceeded);
         if (!string.IsNullOrEmpty(report.Message)) builder.WithMessage(report.Message);
-       return builder.Build();
+        return builder.Build();
     }
 }

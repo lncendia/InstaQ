@@ -14,6 +14,17 @@
             <th scope="row">Хештег</th>
             <td>@Model.Hashtag</td>
         </tr>
+        <tr>
+            <th scope="row">Все участники</th>
+            @if (Model.AllParticipants)
+            {
+                <td>Да</td>
+            }
+            else
+            {
+                <td>Нет</td>
+            }
+        </tr>
         @if (Model.IsStarted)
         {
             <tr>
@@ -21,12 +32,16 @@
                 <td>@Model.Process/@Model.PublicationsCount</td>
             </tr>
             <tr>
-                <th scope="row">Дата начала</th>
-                <td>@Model.StartDate!.Value.ToOffset(TimeSpan.FromHours(3)).ToString("G")</td>
-            </tr>
-            <tr>
                 <th scope="row">Кол-во элементов</th>
                 <td>@Model.ElementsCount</td>
+            </tr>
+            <tr>
+                <th scope="row">Кол-во запросов</th>
+                <td>@Model.RequestsCount</td>
+            </tr>
+            <tr>
+                <th scope="row">Дата начала</th>
+                <td>@Model.StartDate!.Value.ToOffset(TimeSpan.FromHours(3)).ToString("G")</td>
             </tr>
         }
         @if (Model.IsCompleted)

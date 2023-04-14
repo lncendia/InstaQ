@@ -10,6 +10,6 @@ public class CommentReportMapper : IReportMapperUnit<CommentReportDto, CommentRe
     {
         return new CommentReportViewModel(report.Id, report.CreationDate, report.StartDate, report.EndDate,
             report.IsStarted, report.IsCompleted, report.IsSucceeded, report.Message, report.ElementsCount,
-            report.Hashtag, report.Process, report.PublicationsCount);
+            report.Hashtag, report.Process, report.PublicationsCount, report.AllParticipants, report.RequestsCount);
     }
 }

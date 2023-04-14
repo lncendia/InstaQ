@@ -2,13 +2,17 @@
 
 public abstract class PublicationReportDto : ReportDto.ReportDto
 {
-    protected PublicationReportDto(PublicationReportBuilder builder) : base(builder)
+    protected PublicationReportDto(Guid id, DateTimeOffset creationDate, DateTimeOffset? startDate,
+        DateTimeOffset? endDate, bool isStarted, bool isCompleted, bool isSucceeded, string? message, int elementsCount,
+        int requestsCount, string hashtag, int publicationsCount, int process, bool allParticipants,
+        IEnumerable<string> linkedUsers) : base(id, creationDate, startDate, endDate, isStarted, isCompleted,
+        isSucceeded, message, elementsCount, requestsCount)
     {
-        Hashtag = builder.Hashtag ?? throw new ArgumentException("builder not formed", nameof(builder));
-        if (builder.LinkedUsers != null) LinkedUsers.AddRange(builder.LinkedUsers);
-        PublicationsCount = builder.PublicationsCount;
-        Process = builder.Process;
-        AllParticipants = builder.AllParticipants;
+        Hashtag = hashtag;
+        PublicationsCount = publicationsCount;
+        Process = process;
+        AllParticipants = allParticipants;
+        LinkedUsers.AddRange(linkedUsers);
     }
 
     public List<string> LinkedUsers { get; } = new();

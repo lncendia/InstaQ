@@ -18,7 +18,8 @@ internal static class ReportMapper
             .WithProcess(report.Process)
             .WithPublicationsCount(report.Publications.Count)
             .WithDates(report.StartDate!.Value, report.EndDate)
-            .WithStatus(report.IsCompleted, report.IsSucceeded);
+            .WithStatus(report.IsCompleted, report.IsSucceeded)
+            .WithRequests(report.RequestsCount);
 
         if (!string.IsNullOrEmpty(report.Message)) builder.WithMessage(report.Message);
     }

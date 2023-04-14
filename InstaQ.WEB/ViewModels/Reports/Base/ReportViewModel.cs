@@ -3,7 +3,7 @@
 public abstract class ReportViewModel
 {
     protected ReportViewModel(Guid id, DateTimeOffset creationDate, DateTimeOffset? startDate, DateTimeOffset? endDate,
-        bool isStarted, bool isCompleted, bool isSucceeded, string? message, int elementsCount)
+        bool isStarted, bool isCompleted, bool isSucceeded, string? message, int elementsCount, int requestsCount)
     {
         Id = id;
         CreationDate = creationDate;
@@ -14,6 +14,7 @@ public abstract class ReportViewModel
         IsSucceeded = isSucceeded;
         Message = message;
         ElementsCount = elementsCount;
+        RequestsCount = requestsCount;
     }
 
     public Guid Id { get; }
@@ -25,4 +26,5 @@ public abstract class ReportViewModel
     public bool IsSucceeded { get; }
     public string? Message { get; }
     public int ElementsCount { get; }
+    public int RequestsCount { get; }
 }

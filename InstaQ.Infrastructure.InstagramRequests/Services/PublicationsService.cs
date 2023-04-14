@@ -24,7 +24,7 @@ public class PublicationsService : IPublicationsService
         _hashtagHandler = hashtagHandler;
     }
 
-    private async Task<(List<PublicationModel>, int)> GetPublicationsPageAsync(string query, int count,
+    private async Task<(List<PublicationModel>, int)> GetPublicationsAsync(string query, int count,
         string? nextFrom, CancellationToken token)
     {
         var countRequests = 0;
@@ -56,7 +56,7 @@ public class PublicationsService : IPublicationsService
 
     public async Task<PublicationsResultDto> GetAsync(string hashtag, int count, CancellationToken token)
     {
-        if (count < 1) throw new ArgumentException("Count can't be less then zero.");
+        if (count < 1) throw new ArgumentException("Count can't be less or equal zero.");
         if (hashtag.StartsWith('#')) hashtag = hashtag[1..];
         hashtag = hashtag.ToLower();
         var countRequests = 0;
@@ -71,7 +71,7 @@ public class PublicationsService : IPublicationsService
             if (publications.Count < count && tag.Recent.MoreAvailable)
             {
                 var allPublications =
-                    await GetPublicationsPageAsync(hashtag, count, tag.Recent.NextMaxId, token);
+                    await GetPublicationsAsync(hashtag, count, tag.Recent.NextMaxId, token);
                 countRequests += allPublications.Item2;
                 publications.AddRange(allPublications.Item1.DistinctBy(x => x.Pk)
                     .Select(item => new PublicationDto(item.Pk, item.User.Pk, item.Code, item.LikeCount,

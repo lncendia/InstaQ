@@ -2,17 +2,19 @@
 
 public abstract class ReportDto
 {
-    protected ReportDto(ReportBuilder builder)
+    protected ReportDto(Guid id, DateTimeOffset creationDate, DateTimeOffset? startDate, DateTimeOffset? endDate,
+        bool isStarted, bool isCompleted, bool isSucceeded, string? message, int elementsCount, int requestsCount)
     {
-        Id = builder.Id ?? throw new ArgumentException("builder not formed", nameof(builder));
-        CreationDate = builder.CreationDate ?? throw new ArgumentException("builder not formed", nameof(builder));
-        StartDate = builder.StartDate;
-        EndDate = builder.EndDate;
-        IsStarted = builder.IsStarted;
-        IsCompleted = builder.IsCompleted;
-        IsSucceeded = builder.IsSucceeded;
-        Message = builder.Message;
-        ElementsCount = builder.ElementsCount;
+        Id = id;
+        CreationDate = creationDate;
+        StartDate = startDate;
+        EndDate = endDate;
+        IsStarted = isStarted;
+        IsCompleted = isCompleted;
+        IsSucceeded = isSucceeded;
+        Message = message;
+        ElementsCount = elementsCount;
+        RequestsCount = requestsCount;
     }
 
     public Guid Id { get; }
@@ -24,4 +26,5 @@ public abstract class ReportDto
     public bool IsSucceeded { get; }
     public string? Message { get; }
     public int ElementsCount { get; }
+    public int RequestsCount { get; }
 }

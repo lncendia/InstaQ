@@ -2,10 +2,12 @@
 
 public class CommentElementDto : PublicationElementDto.PublicationElementDto
 {
-    public CommentElementDto(CommentElementBuilder builder) : base(builder)
+    public CommentElementDto(string name, string pk, string likeChatName, Guid participantId, bool isAccepted,
+        bool vip, string? note, IEnumerable<CommentDto> comments, IEnumerable<CommentElementDto> children) : base(name,
+        pk, likeChatName, participantId, isAccepted, vip, note)
     {
-        if (builder.Comments != null) Comments.AddRange(builder.Comments);
-        if (builder.Children != null) Children.AddRange(builder.Children);
+        Comments.AddRange(comments);
+        Children.AddRange(children);
     }
 
     public List<CommentDto> Comments { get; } = new();

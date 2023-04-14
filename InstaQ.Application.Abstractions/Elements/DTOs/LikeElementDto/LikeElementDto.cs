@@ -2,10 +2,12 @@
 
 public class LikeElementDto : PublicationElementDto.PublicationElementDto
 {
-    public LikeElementDto(LikeElementBuilder builder) : base(builder)
+    public LikeElementDto(string name, string pk, string likeChatName, Guid participantId, bool isAccepted,
+        bool vip, string? note, IEnumerable<LikeDto> likes, IEnumerable<LikeElementDto> children) : base(name,
+        pk, likeChatName, participantId, isAccepted, vip, note)
     {
-        if (builder.Likes != null) Likes.AddRange(builder.Likes);
-        if (builder.Children != null) Children.AddRange(builder.Children);
+        Likes.AddRange(likes);
+        Children.AddRange(children);
     }
 
     public List<LikeDto> Likes { get; } = new();
